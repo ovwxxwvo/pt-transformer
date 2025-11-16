@@ -3,11 +3,11 @@
 
 Universal Architecture PyTorch Transformer.  
 Basic modules:  
-FeedForwardNetwork, ScaleDotAttention, MultiHeadAttention, ...  
+FeedForwardNetwork, MaskGenerator, ...  
 Core modules:  
-EncodeLayer, DecodeLayer, InputLayer, OutputLayer, MaskGenerator.  
+EncodeLayer, DecodeLayer, InputLayer, OutputLayer, Transformer.  
 Util modules:  
-DataHandler, MetriMeter, Modehandler, ...  
+DataHandler, ModeHandler, MetricMeter, LossPenalizer, EarlyStopper, ...  
 
 ----  
 
