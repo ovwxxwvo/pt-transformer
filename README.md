@@ -13,14 +13,14 @@ Core modules (`./transformer/model.py`):
   - EncodeLayer, DecodeLayer, InputLayer, OutputLayer, Transformer.  
 
 Util modules (`./transformer/utils.py`):  
-  - DataHandler, ModeHandler, MetricMeter, LossPenalizer, EarlyStopper, ...  
+  - DataHandler, ModelHandler, MetricMeter, LossPenalizer, EarlyStopper, ...  
 
 ----  
 
 ### 🔧 Function 功能  
 
 DataHandler  
-  - **`reverse_vocab`|`batch_data`|`save_log`|`save_modle_weight`| ...**  
+  - **`reverse_vocab`|`batch_data`|`save_log`|`save_model_weight`| ...**  
 
 ModeHandler  
   - **`train_model`|`eval_model`|`infer_model`**  
