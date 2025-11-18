@@ -1,0 +1,81 @@
+# Transformer config,
+
+
+[path]
+  data_dirt = "/home/project/250902_pt-translator/data/"
+
+  # file_tokenid_src_train = "tokenid_src_adjust.pt"
+  # file_tokenid_tgt_train = "tokenid_tgt_adjust.pt"
+  file_tokenid_src_train = "tokenid_src_train.pt"
+  file_tokenid_tgt_train = "tokenid_tgt_train.pt"
+  file_tokenid_src_eval  = "tokenid_src_eval.pt"
+  file_tokenid_tgt_eval  = "tokenid_tgt_eval.pt"
+  file_vocab_src         = "vocab_src.json"
+  file_vocab_tgt         = "vocab_tgt.json"
+  file_tokenizer_src     = "tokenizer_src.json"
+  file_tokenizer_tgt     = "tokenizer_tgt.json"
+  file_model_log         = "model.log"
+  file_model_weight      = "model_weight.pth"
+  file_model_weight_new  = "model_weight_new.pth"
+
+[epoch]
+  epoch_total = 32
+  epoch_train = 1
+  epoch_eval  = 1
+  epoch_infer = 1
+
+[general]
+  device = "cpu"
+  text   = "hello, how is your day going!"
+  input_text  = "hello, how is your day going!"
+  output_text = ""
+  unk_token = "[UNK]"
+  pad_token = "[PAD]"
+  sos_token = "[SOS]"
+  eos_token = "[EOS]"
+  unk_id = 0
+  pad_id = 0
+  sos_id = 0
+  eos_id = 0
+
+[dataset]
+  batch_size    = 8
+  seq_len       = 128
+  shuffle_train = true
+  shuffle_eval  = false
+  tokenizer_src    = {}
+  tokenizer_tgt    = {}
+  id2word_src      = {}
+  id2word_tgt      = {}
+  databatchs_train = []
+  databatchs_eval  = []
+
+[optimizer]
+  lr           = "1e-5"
+  weight_decay = "1e-6"
+  betas        = [0.950, 0.990]
+
+[scheduler]
+  min_lr   = "1e-6"
+  mode     = "min"
+  factor   = 0.8
+  patience = 2
+  verbose  = true
+
+[metricmeter]
+  label_smoothing    = 0.00
+  bleu_weights       = [0.5, 0.5, 0.0, 0.0]
+
+[penalizer]
+  penalty_ids        = [3, 59]
+  penalty_weight     = 0.02
+  # entropy_enc_weight = 0.01
+  # entropy_dec_weight = 0.01
+
+[stopper]
+  patience_loss = 4
+  patience_bleu = 4
+  delta_loss    = 0.08
+  delta_bleu    = 0.02
+
+

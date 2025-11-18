@@ -1,0 +1,17 @@
+# Transformer config,
+
+
+[transformer]
+  d_model      = 512
+  n_heads      = 4
+  enc_n_layers = 4
+  dec_n_layers = 4
+  d_ff         = 2048
+  src_dropout  = 0.1
+  tgt_dropout  = 0.1
+  enc_need_weights = false
+  dec_need_weights = false
+  src_vocab_size = ""
+  tgt_vocab_size = ""
+
+
