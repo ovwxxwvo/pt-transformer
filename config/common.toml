@@ -35,32 +35,4 @@
   databatchs_train = []
   databatchs_eval  = []
 
-[optimizer]
-  lr           = "1e-5"
-  weight_decay = "1e-6"
-  betas        = [0.950, 0.990]
-
-[scheduler]
-  min_lr   = "1e-6"
-  mode     = "min"
-  factor   = 0.8
-  patience = 2
-  verbose  = true
-
-[metricmeter]
-  label_smoothing    = 0.00
-  bleu_weights       = [0.5, 0.5, 0.0, 0.0]
-
-[penalizer]
-  penalty_ids        = [3, 59]
-  penalty_weight     = 0.02
-  # entropy_enc_weight = 0.01
-  # entropy_dec_weight = 0.01
-
-[stopper]
-  patience_loss = 4
-  patience_bleu = 4
-  delta_loss    = 0.08
-  delta_bleu    = 0.02
-
 

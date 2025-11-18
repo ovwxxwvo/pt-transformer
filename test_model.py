@@ -1,106 +1,77 @@
-
 import torch
-import torch.nn as nn
-# 假设你的nn_ext模块和Transformer在同一目录，若路径不同需调整
-from transformer.model import Transformer  # 替换为你的Transformer所在文件路径
+from transformer.model import Transformer
 
-# -------------------------- 1. 测试配置（可自定义）--------------------------
-src_vocab_size = 1000    # 源语言词汇表大小
-tgt_vocab_size = 1000    # 目标语言词汇表大小
-pad_id = 0               # 填充标记ID（与模型一致）
-batch_size = 2           # 批次大小
-src_seq_len = 8          # 源序列长度（不等长模拟）
-tgt_seq_len = 6          # 目标序列长度（不等长模拟）
-d_model = 128            # 模型维度（缩小维度加快测试）
-n_heads = 2              # 注意力头数
-enc_n_layers = 2         # 编码器层数
-dec_n_layers = 2         # 解码器层数
-d_ff = 512               # 前馈网络维度
 
-# -------------------------- 2. 生成测试数据（模拟真实输入）--------------------------
-def generate_test_data(batch_size, max_src_len, max_tgt_len, vocab_size, pad_id):
-    """生成不等长序列，补0对齐为等长张量（模拟真实数据预处理）"""
-    # 生成源序列（batch_size个不等长序列，长度3~max_src_len）
-    src_seqs = []
-    for _ in range(batch_size):
-        seq_len = torch.randint(3, max_src_len+1, (1,)).item()
-        seq = torch.randint(1, vocab_size, (seq_len,))  # 1~vocab_size（避免pad_id=0）
-        # 补0对齐到max_src_len
-        padded_seq = torch.cat([seq, torch.full((max_src_len - seq_len,), pad_id, dtype=torch.long)])
-        src_seqs.append(padded_seq)
-    src_tensor = torch.stack(src_seqs)  # (batch_size, max_src_len)
+def main():
+    print(f"-- Test Model Workflow --")
+    print("=" * 40)
 
-    # 生成目标序列（batch_size个不等长序列，长度2~max_tgt_len）
-    tgt_seqs = []
-    for _ in range(batch_size):
-        seq_len = torch.randint(2, max_tgt_len+1, (1,)).item()
-        seq = torch.randint(1, vocab_size, (seq_len,))
-        padded_seq = torch.cat([seq, torch.full((max_tgt_len - seq_len,), pad_id, dtype=torch.long)])
-        tgt_seqs.append(padded_seq)
-    tgt_tensor = torch.stack(tgt_seqs)  # (batch_size, max_tgt_len)
+# Step 1: Data Initialization (Generate test tensors + assign key parameters)
+    print("\n【Step 1: Data Initialization】")
+    src_vocab_size = 1024
+    tgt_vocab_size = 1024
+    batch_size  = 8
+    src_seq_len = 64
+    tgt_seq_len = 64
+    # Generate tensors (values avoid pad_id, range: [1, vocab_size-1])
+    x_src = torch.randint(1, src_vocab_size, (batch_size, src_seq_len), dtype=torch.long)
+    x_tgt = torch.randint(1, tgt_vocab_size, (batch_size, tgt_seq_len), dtype=torch.long)
+    # Key parameters (loaded from config, no manual definition needed)
+    print(f"✓ Key params: src_vocab_size={src_vocab_size} | tgt_vocab_size={tgt_vocab_size}")
+    print(f"✓ Tensors generated: x_src({x_src.shape}) | x_tgt({x_tgt.shape})")
 
-    return src_tensor, tgt_tensor
+# Step 2: Model Initialization (keep your original logic, fix param order)
+    print("\n【Step 2: Model Initialization】")
+    pad_id = 0
+    n_heads = 4
+    enc_n_layers = 8
+    dec_n_layers = 8
+    enc_need_weight = True
+    dec_need_weight = True
+    model: torch.nn.Module = Transformer(
+        pad_id,
+        src_vocab_size,
+        tgt_vocab_size,
+        n_heads=n_heads,
+        enc_n_layers=enc_n_layers,
+        dec_n_layers=dec_n_layers,
+        enc_need_weight=enc_need_weight,
+        dec_need_weight=dec_need_weight,
+        )
+    print(f"✓ Model initialized successfully")
 
-# 生成测试数据
-src_input, tgt_input = generate_test_data(
-    batch_size=batch_size,
-    max_src_len=src_seq_len,
-    max_tgt_len=tgt_seq_len,
-    vocab_size=src_vocab_size,
-    pad_id=pad_id
-)
+# Step 3: Model Testing (Forward pass + result validation)
+    print("\n【Step 3: Model Testing】")
+    model.eval()           # Switch to eval mode (disable Dropout)
+    with torch.no_grad():  # Disable gradient computation for efficiency
+        logits, attn_weights = model(x_src, x_tgt)
 
-print("="*60)
-print("测试数据生成完成")
-print(f"源序列形状：{src_input.shape} (batch_size, max_src_len)")
-print(f"源序列数据：\n{src_input}")
-print(f"\n目标序列形状：{tgt_input.shape} (batch_size, max_tgt_len)")
-print(f"目标序列数据：\n{tgt_input}")
-print("="*60)
+# Result validation (core metrics)
 
-# -------------------------- 3. 实例化Transformer模型--------------------------
-model = Transformer(
-    src_vocab_size=src_vocab_size,
-    tgt_vocab_size=tgt_vocab_size,
-    pad_id=pad_id,
-    d_model=d_model,
-    n_heads=n_heads,
-    enc_n_layers=enc_n_layers,
-    dec_n_layers=dec_n_layers,
-    d_ff=d_ff,
-    src_dropout=0.1,
-    tgt_dropout=0.1,
-    enc_need_weight=True,  # 测试时返回注意力权重
-    dec_need_weight=True
-)
+    # 1. Validate output shape
+    expected_shape = (batch_size, tgt_seq_len, tgt_vocab_size)
+    assert logits.shape == expected_shape, f"Output shape mismatch! Expected {expected_shape}, got {logits.shape}"
+    # 2. Validate no abnormal values (NaN/Inf)
+    assert not torch.isnan(logits).any(), "Output contains NaN! Model is unstable"
+    assert not torch.isinf(logits).any(), "Output contains Inf! Model is unstable"
+    # 3. 核心权重验证
+    if enc_need_weight:
+        assert len(attn_weights["enc"]) == enc_n_layers, f"Encoder weight layers mismatch! Expected {enc_n_layers}, got {len(attn_weights['enc'])}"
+        assert all(isinstance(layer_w[0], torch.Tensor) for layer_w in attn_weights["enc"]), "Encoder has invalid weight (not tensor)"
+    if dec_need_weight:
+        assert len(attn_weights["dec"]) == dec_n_layers, f"Decoder weight layers mismatch! Expected {dec_n_layers}, got {len(attn_weights['dec'])}"
+        assert all(isinstance(layer_w[0], torch.Tensor) for layer_w in attn_weights["dec"]), "Decoder has invalid weight (not tensor)"
 
-# 设为测试模式（禁用dropout）
-model.eval()
+    print(f"✓ Forward pass successful! Logits shape: {logits.shape}")
+    print(f"✓ Value validation passed (No NaN/Inf)")
+    if enc_need_weight or dec_need_weight:
+        print(f"✓ Attention weights output normally")
+        print(f"✓ Encoder attention: {len(attn_weights['enc'])} layers (valid tensors)")
+        print(f"✓ Decoder attention: {len(attn_weights['dec'])} layers (valid tensors)")
+    print("\n🎉 Transformer model test passed completely!")
 
-print("\n模型实例化完成，参数概况：")
-print(f"模型总参数量：{sum(p.numel() for p in model.parameters()):,}")
-print("="*60)
 
-# -------------------------- 4. 前向传播测试--------------------------
-with torch.no_grad():  # 禁用梯度计算，加快测试
-    logits, attn_weights = model(src_input, tgt_input)
+if __name__ == "__main__":
+    main()
 
-# -------------------------- 5. 结果验证（确保输出符合预期）--------------------------
-print("前向传播测试完成，结果验证：")
-print(f"输出Logits形状：{logits.shape} (batch_size, max_tgt_len, tgt_vocab_size)")
-assert logits.shape == (batch_size, tgt_seq_len, tgt_vocab_size), "Logits形状不符合预期！"
 
-# 验证注意力权重
-print(f"\n编码器注意力权重层数：{len(attn_weights['enc'])} (与enc_n_layers一致)")
-print(f"解码器注意力权重层数：{len(attn_weights['dec'])} (与dec_n_layers一致)")
-assert len(attn_weights['enc']) == enc_n_layers, "编码器注意力权重层数错误！"
-assert len(attn_weights['dec']) == dec_n_layers, "解码器注意力权重层数错误！"
-
-# 打印部分结果示例
-print(f"\nLogits前2个样本的前3个位置输出维度：{logits[:2, :3].shape}")
-print(f"第一个编码器层的注意力权重形状：{attn_weights['enc'][0][0].shape}")
-print(f"第一个解码器层的交叉注意力权重形状：{attn_weights['dec'][0][0].shape}")
-
-print("\n" + "="*60)
-print("🎉 Transformer模型测试全部通过！无报错且输出符合预期～")
-print("="*60)

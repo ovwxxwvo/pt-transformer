@@ -9,8 +9,7 @@ from transformer.utils import (
     DataHandler, MetricMeter, LossPenalizer, EarlyStopper, ModelHandler, )
 
 
-c = config.load()
-Variable = variable.assign(c)
+Variable = variable.assign(config.load())
 
 def init():
     print(f"-- Transformer Model --")

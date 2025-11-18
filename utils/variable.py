@@ -2,7 +2,7 @@ import os, toml
 
 
 def assign(config):
-    path_data_dirt = config["path"]["data_dirt"]
+    path_data_dirt = config["dirt"]["data_dirt"]
     class Variable():
         def __init__(self):
             print(
@@ -27,14 +27,14 @@ def assign(config):
                 f"dec_n_layers={self.dec_n_layers}",
                 )
             print("-" * 40)
-        path_data_dirt = config["path"]["data_dirt"]
+        path_data_dirt = config["dirt"]["data_dirt"]
 
 # {{{ transformer
         d_model      = config["transformer"]["d_model"]
+        d_ff         = config["transformer"]["d_ff"]
         n_heads      = config["transformer"]["n_heads"]
         enc_n_layers = config["transformer"]["enc_n_layers"]
         dec_n_layers = config["transformer"]["dec_n_layers"]
-        d_ff         = config["transformer"]["d_ff"]
         src_dropout  = config["transformer"]["src_dropout"]
         tgt_dropout  = config["transformer"]["tgt_dropout"]
         enc_need_weights = config["transformer"]["enc_need_weights"]
@@ -43,17 +43,23 @@ def assign(config):
         tgt_vocab_size = config["transformer"]["tgt_vocab_size"]
 
 # {{{ path
-        path_tokenid_src_train = os.path.join(path_data_dirt, config["path"]["file_tokenid_src_train"])
-        path_tokenid_tgt_train = os.path.join(path_data_dirt, config["path"]["file_tokenid_tgt_train"])
-        path_tokenid_src_eval  = os.path.join(path_data_dirt, config["path"]["file_tokenid_src_eval"] )
-        path_tokenid_tgt_eval  = os.path.join(path_data_dirt, config["path"]["file_tokenid_tgt_eval"] )
-        path_vocab_src         = os.path.join(path_data_dirt, config["path"]["file_vocab_src"]        )
-        path_vocab_tgt         = os.path.join(path_data_dirt, config["path"]["file_vocab_tgt"]        )
-        path_tokenizer_src     = os.path.join(path_data_dirt, config["path"]["file_tokenizer_src"]    )
-        path_tokenizer_tgt     = os.path.join(path_data_dirt, config["path"]["file_tokenizer_tgt"]    )
-        path_model_log         = os.path.join(path_data_dirt, config["path"]["file_model_log"]        )
-        path_model_weight      = os.path.join(path_data_dirt, config["path"]["file_model_weight"]     )
-        path_model_weight_new  = os.path.join(path_data_dirt, config["path"]["file_model_weight_new"] )
+        path_tokenid_src_train = os.path.join(path_data_dirt, config["file"]["tokenid_src_train"])
+        path_tokenid_tgt_train = os.path.join(path_data_dirt, config["file"]["tokenid_tgt_train"])
+        path_tokenid_src_eval  = os.path.join(path_data_dirt, config["file"]["tokenid_src_eval"] )
+        path_tokenid_tgt_eval  = os.path.join(path_data_dirt, config["file"]["tokenid_tgt_eval"] )
+        path_vocab_src         = os.path.join(path_data_dirt, config["file"]["vocab_src"]        )
+        path_vocab_tgt         = os.path.join(path_data_dirt, config["file"]["vocab_tgt"]        )
+        path_tokenizer_src     = os.path.join(path_data_dirt, config["file"]["tokenizer_src"]    )
+        path_tokenizer_tgt     = os.path.join(path_data_dirt, config["file"]["tokenizer_tgt"]    )
+        path_model_log         = os.path.join(path_data_dirt, config["file"]["model_log"]        )
+        path_model_weight      = os.path.join(path_data_dirt, config["file"]["model_weight"]     )
+        path_model_weight_new  = os.path.join(path_data_dirt, config["file"]["model_weight_new"] )
+
+# {{{ general
+        device    = config["general"]["device"]
+        text      = config["general"]["text"]
+        input_text  = config["general"]["input_text"]
+        output_text = config["general"]["output_text"]
 
 # {{{ epoch
         epoch_total = config["epoch"]["epoch_total"]
@@ -62,22 +68,18 @@ def assign(config):
         epoch_infer = config["epoch"]["epoch_infer"]
 
 # {{{ general
-        device    = config["general"]["device"]
-        text      = config["general"]["text"]
-        input_text  = config["general"]["input_text"]
-        output_text = config["general"]["output_text"]
-        unk_token = config["general"]["unk_token"]
-        pad_token = config["general"]["pad_token"]
-        sos_token = config["general"]["sos_token"]
-        eos_token = config["general"]["eos_token"]
-        unk_id = config["general"]["unk_id"]
-        pad_id = config["general"]["pad_id"]
-        sos_id = config["general"]["sos_id"]
-        eos_id = config["general"]["eos_id"]
+        unk_token = config["vocab"]["unk_token"]
+        pad_token = config["vocab"]["pad_token"]
+        sos_token = config["vocab"]["sos_token"]
+        eos_token = config["vocab"]["eos_token"]
+        unk_id    = config["vocab"]["unk_id"]
+        pad_id    = config["vocab"]["pad_id"]
+        sos_id    = config["vocab"]["sos_id"]
+        eos_id    = config["vocab"]["eos_id"]
 
 # {{{ data
         batch_size    = config["dataset"]["batch_size"]
-        seq_len       = config["dataset"]["seq_len"]
+        seq_len       = config["dataset"]["max_seq_len"]
         shuffle_train = config["dataset"]["shuffle_train"]
         shuffle_eval  = config["dataset"]["shuffle_eval"]
         tokenizer_src = config["dataset"]["tokenizer_src"]
@@ -104,8 +106,6 @@ def assign(config):
         stop_patience_bleu  = config["stopper"]["patience_bleu"]
         stop_delta_loss     = config["stopper"]["delta_loss"]
         stop_delta_bleu     = config["stopper"]["delta_bleu"]
-        # entropy_enc_weight = config["meter"]["entropy_enc_weight"]
-        # entropy_dec_weight = config["meter"]["entropy_dec_weight"]
 
 # {{{ regulator
         optimizer    = None

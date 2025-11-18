@@ -5,6 +5,8 @@
 conf_files = [
 
 "model.toml",
+"common.toml",
+"paths.toml",
 "utils.toml",
 
 ]

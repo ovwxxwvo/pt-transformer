@@ -1,0 +1,22 @@
+# Transformer config,
+
+
+[dirt]
+  data_dirt = "/home/project/250902_pt-translator/data/"
+
+[file]
+  # tokenid_src_train = "tokenid_src_adjust.pt"
+  # tokenid_tgt_train = "tokenid_tgt_adjust.pt"
+  tokenid_src_train = "tokenid_src_train.pt"
+  tokenid_tgt_train = "tokenid_tgt_train.pt"
+  tokenid_src_eval  = "tokenid_src_eval.pt"
+  tokenid_tgt_eval  = "tokenid_tgt_eval.pt"
+  vocab_src         = "vocab_src.json"
+  vocab_tgt         = "vocab_tgt.json"
+  tokenizer_src     = "tokenizer_src.json"
+  tokenizer_tgt     = "tokenizer_tgt.json"
+  model_log         = "model.log"
+  model_weight      = "model_weight.pth"
+  model_weight_new  = "model_weight_new.pth"
+
+

@@ -87,14 +87,14 @@ class OutputLayer(nn.Module):
 
 class Transformer(nn.Module):
     def __init__(self,
+        pad_id,
         src_vocab_size,
         tgt_vocab_size,
-        pad_id,
         d_model=512,
+        d_ff=1024,
         n_heads=4,
         enc_n_layers=4,
         dec_n_layers=4,
-        d_ff=2048,
         src_dropout=0.1,
         tgt_dropout=0.1,
         enc_need_weight=False,
@@ -107,9 +107,9 @@ class Transformer(nn.Module):
         self.output    = OutputLayer(d_model, tgt_vocab_size)
         self.encodes = nn.ModuleList([EncodeLayer(d_model, n_heads, d_ff, src_dropout, enc_need_weight) for _ in range(enc_n_layers)])
         self.decodes = nn.ModuleList([DecodeLayer(d_model, n_heads, d_ff, tgt_dropout, dec_need_weight) for _ in range(dec_n_layers)])
-        print("=" * 40)
-        print(f"Transformer Model Structure Initialized.")
-        print("=" * 40)
+        # print("=" * 40)
+        print(f"Transformer Model Initialized.")
+        # print("=" * 40)
 
     def forward(self, x_src, x_tgt):
         pad_id = self.pad_id
