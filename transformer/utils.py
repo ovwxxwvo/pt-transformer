@@ -82,6 +82,133 @@ class DataHandler():
         # print(ids)
         print(text_gen)
 
+class ModelHandler():
+    def __init__(self, model, device="cpu"):
+        self.model = model
+        self.device = device
+
+    @torch.enable_grad()
+    def train_model(self, databatchs,
+        optimizer:      torch.optim,
+        metric_meter:   MetricMeter,
+        loss_penalizer: LossPenalizer,
+    ):
+        device = self.device
+        model = self.model
+        model.train()
+        meter = metric_meter
+        penalizer = loss_penalizer
+        meter.reset()
+        penalizer.reset()
+
+        desc = "Model Train"
+        batch = len(databatchs)
+        step = 0
+        yield { "type": "init", "data" : {
+            "desc" : desc,
+            "batch": batch,
+            },}
+
+        for x_src, x_tgt in databatchs:
+            x_src = x_src.to(device)
+            x_tgt = x_tgt.to(device)
+            optimizer.zero_grad()
+            logits, attn_weights  = model(x_src, x_tgt[:, :-1])
+            loss, grad_loss       = meter.calc_loss(logits, x_tgt[:, 1:])
+            ids_pen, grad_ids_pen = penalizer.calc_penalty(logits, x_tgt[:, 1:])
+            grad_loss = grad_loss + grad_ids_pen
+            grad_loss.backward()
+            optimizer.step()
+            step += 1
+            yield { "type": "update", "data" : {
+                "step" : step,
+                "loss" : loss,
+                "ids_pen" : ids_pen,
+                },}
+
+        loss    = meter.loss
+        ids_pen = penalizer.ids_penalty
+
+        # return loss
+        yield { "type" : "final", "data" : {
+            "loss"    : loss,
+            "ids_pen" : ids_pen,
+            },}
+
+    @torch.no_grad()
+    def eval_model( self, databatchs,
+        scheduler:      torch.optim.lr_scheduler,
+        metricmeter:    MetricMeter,
+    ):
+        device = self.device
+        model = self.model
+        model.eval()
+        meter = metricmeter
+        meter.reset()
+
+        desc = "Model Eval "
+        batch = len(databatchs)
+        step = 0
+        yield { "type": "init", "data" : {
+            "desc" : desc,
+            "batch": batch,
+            },}
+
+        for x_src, x_tgt in databatchs:
+            x_src = x_src.to(device)
+            x_tgt = x_tgt.to(device)
+            logits, _ = model(x_src, x_tgt[:, :-1])
+            loss, _ = meter.calc_loss(logits, x_tgt[:, 1:])
+            bleu, _ = meter.calc_bleu(logits, x_tgt[:, 1:])
+            step += 1
+            yield { "type": "update", "data" : {
+                "step" : step,
+                "loss" : loss,
+                "bleu" : bleu,
+                },}
+
+        loss = meter.loss
+        bleu = meter.bleu
+        scheduler.step(loss)
+
+        # return loss, bleu
+        yield { "type" : "final", "data" : {
+            "loss" : loss,
+            "bleu" : bleu,
+            },}
+
+    @torch.no_grad()
+    def infer_model(self, text, seq_len,
+        pad_id, unk_id, sos_id, eos_id,
+        tokenizer_src,
+        tokenizer_tgt,
+    ):
+        device = self.device
+        model  = self.model
+        model.eval()
+
+        src_ids = tokenizer_src.encode(text).ids
+        src_ids = [sos_id] + src_ids + [eos_id]
+        src_ids = src_ids[:seq_len]
+        while len(src_ids) < seq_len : src_ids.append(pad_id)
+        tgt_ids = [sos_id]
+
+        x_src = torch.tensor([src_ids], dtype=torch.long).to(device)
+        x_tgt = torch.tensor([tgt_ids], dtype=torch.long).to(device)
+        text = ""
+
+        for _ in range(seq_len-1):
+            logits, _ = model(x_src, x_tgt)
+            x_next = logits.argmax(dim=-1)[:, -1].unsqueeze(1)
+            x_tgt = torch.cat([x_tgt, x_next], dim=1)
+            next_id = x_next[0].item()
+            next_word = tokenizer_tgt.decode([next_id])
+            text += "".join(next_word)
+            if next_id == eos_id : break
+            yield next_word
+
+        # return text
+
 class LossMeter():
     def __init__(self, pad_id, label_smoothing):
         self.epoch_avg_loss = 0.0
@@ -299,133 +426,6 @@ class EarlyStopper:
         if metric["counter"] >= metric["patience"] :
             print(f"Metric {metric['name']} activate stop.")
             exit()
-
-class ModelHandler():
-    def __init__(self, model, device="cpu"):
-        self.model = model
-        self.device = device
-
-    @torch.enable_grad()
-    def train_model(self, databatchs,
-        optimizer:      torch.optim,
-        metric_meter:   MetricMeter,
-        loss_penalizer: LossPenalizer,
-    ):
-        device = self.device
-        model = self.model
-        model.train()
-        meter = metric_meter
-        penalizer = loss_penalizer
-        meter.reset()
-        penalizer.reset()
-
-        desc = "Model Train"
-        batch = len(databatchs)
-        step = 0
-        yield { "type": "init", "data" : {
-            "desc" : desc,
-            "batch": batch,
-            },}
-
-        for x_src, x_tgt in databatchs:
-            x_src = x_src.to(device)
-            x_tgt = x_tgt.to(device)
-            optimizer.zero_grad()
-            logits, attn_weights  = model(x_src, x_tgt[:, :-1])
-            loss, grad_loss       = meter.calc_loss(logits, x_tgt[:, 1:])
-            ids_pen, grad_ids_pen = penalizer.calc_penalty(logits, x_tgt[:, 1:])
-            grad_loss = grad_loss + grad_ids_pen
-            grad_loss.backward()
-            optimizer.step()
-            step += 1
-            yield { "type": "update", "data" : {
-                "step" : step,
-                "loss" : loss,
-                "ids_pen" : ids_pen,
-                },}
-
-        loss    = meter.loss
-        ids_pen = penalizer.ids_penalty
-
-        # return loss
-        yield { "type" : "final", "data" : {
-            "loss"    : loss,
-            "ids_pen" : ids_pen,
-            },}
-
-    @torch.no_grad()
-    def eval_model( self, databatchs,
-        scheduler:      torch.optim.lr_scheduler,
-        metricmeter:    MetricMeter,
-    ):
-        device = self.device
-        model = self.model
-        model.eval()
-        meter = metricmeter
-        meter.reset()
-
-        desc = "Model Eval "
-        batch = len(databatchs)
-        step = 0
-        yield { "type": "init", "data" : {
-            "desc" : desc,
-            "batch": batch,
-            },}
-
-        for x_src, x_tgt in databatchs:
-            x_src = x_src.to(device)
-            x_tgt = x_tgt.to(device)
-            logits, _ = model(x_src, x_tgt[:, :-1])
-            loss, _ = meter.calc_loss(logits, x_tgt[:, 1:])
-            bleu, _ = meter.calc_bleu(logits, x_tgt[:, 1:])
-            step += 1
-            yield { "type": "update", "data" : {
-                "step" : step,
-                "loss" : loss,
-                "bleu" : bleu,
-                },}
-
-        loss = meter.loss
-        bleu = meter.bleu
-        scheduler.step(loss)
-
-        # return loss, bleu
-        yield { "type" : "final", "data" : {
-            "loss" : loss,
-            "bleu" : bleu,
-            },}
-
-    @torch.no_grad()
-    def infer_model(self, text, seq_len,
-        pad_id, unk_id, sos_id, eos_id,
-        tokenizer_src,
-        tokenizer_tgt,
-    ):
-        device = self.device
-        model  = self.model
-        model.eval()
-
-        src_ids = tokenizer_src.encode(text).ids
-        src_ids = [sos_id] + src_ids + [eos_id]
-        src_ids = src_ids[:seq_len]
-        while len(src_ids) < seq_len : src_ids.append(pad_id)
-        tgt_ids = [sos_id]
-
-        x_src = torch.tensor([src_ids], dtype=torch.long).to(device)
-        x_tgt = torch.tensor([tgt_ids], dtype=torch.long).to(device)
-        text = ""
-
-        for _ in range(seq_len-1):
-            logits, _ = model(x_src, x_tgt)
-            x_next = logits.argmax(dim=-1)[:, -1].unsqueeze(1)
-            x_tgt = torch.cat([x_tgt, x_next], dim=1)
-            next_id = x_next[0].item()
-            next_word = tokenizer_tgt.decode([next_id])
-            text += "".join(next_word)
-            if next_id == eos_id : break
-            yield next_word
-
-        # return text
 
 # class AttnPenalty():
     # def __init__(self, enc_weight, dec_weight):
