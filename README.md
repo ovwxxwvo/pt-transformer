@@ -42,11 +42,7 @@ EarlyStopper
 
 Clone the repo to your project dir :  
 ```  
-git clone https://github.com/ovwxxwvo/pt-transformer.git  
-```  
-Keep only `Transformer` core dir in project :  
-```  
-cd pt-transformer && mv transformer ../ && cd ../ && rm -rf pt-transformer  
+git archive --remote=https://github.com/ovwxxwvo/pt-transformer.git master transformer/ | tar -x -C ./  
 ```  
 
 ----  

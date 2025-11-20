@@ -1,7 +1,7 @@
 ###### Transformer Model  
 
 ```  
-                                                  Infer only, Train & Eval aren't needed.  
+                                                  Infer only, Train & Eval are unneeded.  
  |                                                       → → → → → → → → → → → → → → ↓  
  |                                                       ↑                           ↓  
  |          |                                           x_tgt(porb)   |          |   ↓  
@@ -43,7 +43,7 @@
  |          |           x_src                           x_tgt(shft)   |          |   ↓  
  |                                                       ↑                           ↓  
  |                                                       ↑ ← ← ← ← ← ← ← ← ← ← ← ← ← ←  
-                                                  Infer only, Train & Eval aren't needed.  
+                                                  Infer only, Train & Eval are unneeded.  
 ```  
 
 

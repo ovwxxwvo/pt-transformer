@@ -2,9 +2,9 @@
 
 
 00/
+00.sh
+
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
 
 
