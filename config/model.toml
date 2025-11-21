@@ -9,8 +9,8 @@
   dec_n_layers = 4
   src_dropout  = 0.1
   tgt_dropout  = 0.1
-  enc_need_weights = false
-  dec_need_weights = false
+  enc_need_weight = false
+  dec_need_weight = false
   src_vocab_size = ""
   tgt_vocab_size = ""
 

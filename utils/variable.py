@@ -37,8 +37,8 @@ def assign(config):
         dec_n_layers = config["transformer"]["dec_n_layers"]
         src_dropout  = config["transformer"]["src_dropout"]
         tgt_dropout  = config["transformer"]["tgt_dropout"]
-        enc_need_weights = config["transformer"]["enc_need_weights"]
-        dec_need_weights = config["transformer"]["dec_need_weights"]
+        enc_need_weight = config["transformer"]["enc_need_weight"]
+        dec_need_weight = config["transformer"]["dec_need_weight"]
         src_vocab_size = config["transformer"]["src_vocab_size"]
         tgt_vocab_size = config["transformer"]["tgt_vocab_size"]
 

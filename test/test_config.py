@@ -1,5 +1,4 @@
-from utils import basic, config, variable
-
+from ..utils import config, variable
 
 
 def main():
