@@ -5,10 +5,6 @@ import json
 
 API_BASE_URL = "http://127.0.0.1:8000"
 
-def workflow():
-    requests.post(f"{API_BASE_URL}/workflow")
-    return "Workflow started!"
-
 def train():
     url = f"{API_BASE_URL}/train"
     logs = []
@@ -80,10 +76,6 @@ def infer(text):
 
 with gr.Blocks() as app:
     gr.Markdown("# Transformer 翻译模型")
-
-    with gr.Tab("全流程"):
-        status = gr.Textbox(label="状态")
-        gr.Button("运行工作流").click(fn=workflow, outputs=status)
 
     with gr.Tab("训练"):
         eval_btn  = gr.Button("开始", variant="primary", size="lg")

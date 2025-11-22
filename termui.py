@@ -51,7 +51,7 @@ class Application(App):
         progress_comp = self.query_one(f"#{ID_TRAIN_PROGRESS}")
         output_comp = self.query_one(f"#{ID_TRAIN_OUTPUT}")
 
-        response = requests.post(url=url, stream=True, timeout=5)
+        response = requests.post(url=url, stream=True, timeout=20)
         response.raise_for_status()
 
         for item in response.iter_lines(decode_unicode=True):
@@ -82,7 +82,7 @@ class Application(App):
         progress_comp = self.query_one(f"#{ID_EVAL_PROGRESS}")
         output_comp = self.query_one(f"#{ID_EVAL_OUTPUT}")
 
-        response = requests.post(url=url, stream=True, timeout=5)
+        response = requests.post(url=url, stream=True, timeout=20)
         response.raise_for_status()
 
         for item in response.iter_lines(decode_unicode=True):
@@ -117,6 +117,7 @@ class Application(App):
             url=url,
             json={"text": input_comp.value.strip()},
             stream=True,
+            timeout=20,
             )
         response.raise_for_status()
 
