@@ -2,7 +2,8 @@
 
 
 [dirt]
-  data_dirt = "/home/project/250902_pt-translator/data/"
+  # data_dirt = ""
+  data_dirt = "./data/"
 
 [file]
   # tokenid_src_train = "tokenid_src_adjust.pt"

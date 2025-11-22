@@ -12,6 +12,7 @@
   epoch_train = 1
   epoch_eval  = 1
   epoch_infer = 1
+  current_epoch_total = 1
 
 [vocab]
   unk_token = "[UNK]"

@@ -4,6 +4,10 @@
 00/
 00.sh
 
+data/model.log
+data/model_weight.pth
+data/model_weight_new.pth
+
 __pycache__/
 *.py[cod]
 

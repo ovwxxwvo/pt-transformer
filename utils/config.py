@@ -1,10 +1,9 @@
-import os, sys, toml
+import os, pathlib, toml
 
 
 def load():
     # path = os.path.dirname(os.path.abspath(sys.argv[0]))
-    path = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.dirname(path)
+    path = pathlib.Path(__file__).parent.parent
     conf_dirt = os.path.join(path, "config")
     conf_file = os.path.join(path, "config.toml")
     # print(path)

@@ -1,4 +1,7 @@
-from ..utils import config, variable
+import sys, pathlib
+sys.path.append(str(pathlib.Path(__file__).parent.parent))
+
+from utils import config, variable
 
 
 def main():

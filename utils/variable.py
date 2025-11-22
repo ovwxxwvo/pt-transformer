@@ -1,10 +1,15 @@
-import os, toml
+import os, pathlib, toml
 
 
 def assign(config):
-    path_data_dirt = config["dirt"]["data_dirt"]
-    class Variable():
+    _path_data_dirt = config["dirt"]["data_dirt"]
+    if not _path_data_dirt:
+        _path_data_dirt = os.path.join(pathlib.Path(__file__).parent.parent, "data")
+
+    class Variables():
         def __init__(self):
+            print(f"data_dirt : {self.path_data_dirt}")
+            print("-" * 40)
             print(
                 f"epoch_total={self.epoch_total:02d}",
                 "|",
@@ -27,7 +32,7 @@ def assign(config):
                 f"dec_n_layers={self.dec_n_layers}",
                 )
             print("-" * 40)
-        path_data_dirt = config["dirt"]["data_dirt"]
+        path_data_dirt = _path_data_dirt
 
 # {{{ transformer
         d_model      = config["transformer"]["d_model"]
@@ -66,6 +71,7 @@ def assign(config):
         epoch_train = config["epoch"]["epoch_train"]
         epoch_eval  = config["epoch"]["epoch_eval"]
         epoch_infer = config["epoch"]["epoch_infer"]
+        current_epoch_total = config["epoch"]["current_epoch_total"]
 
 # {{{ general
         unk_token = config["vocab"]["unk_token"]
@@ -116,6 +122,6 @@ def assign(config):
         bleu_stopper = None
 
 ##
-    return Variable
+    return Variables
 
 

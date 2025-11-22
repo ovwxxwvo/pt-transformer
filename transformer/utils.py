@@ -57,9 +57,11 @@ class DataHandler():
         print("-" * 40)
         return databatchs
 
-    def save_log(self, log_content, save_name="model.log"):
-        data_dir = self.data_dir
-        save_path = os.path.join(data_dir, save_name)
+    def save_log(self, log_content, save_path=""):
+        if not save_path:
+            data_dir = self.data_dir
+            save_name="model.log"
+            save_path = os.path.join(data_dir, save_name)
         current_time = datetime.now().strftime("%Y.%m.%d %H:%M:%S")
         log_line = f"[{current_time}]{log_content}\n"
         with open(save_path, "a", encoding="utf-8") as f:
@@ -67,9 +69,11 @@ class DataHandler():
         # print(f"{log_line.strip()}")
         print(f"Model Log saved, {save_path}")
 
-    def save_model_weight(self, model, save_name="model_weight.pth"):
-        data_dir = self.data_dir
-        save_path = os.path.join(data_dir, save_name)
+    def save_model_weight(self, model, save_path=""):
+        if not save_path:
+            data_dir = self.data_dir
+            save_name="model_weight_new.pth"
+            save_path = os.path.join(data_dir, save_name)
         torch.save(model.state_dict(), save_path)
         print(f"Model Weights saved, {save_path}")
         # print("=" * 40)
