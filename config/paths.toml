@@ -4,6 +4,7 @@
 [dirt]
   # data_dirt = ""
   data_dirt = "./data/"
+  log_dirt  = "./log/"
 
 [file]
   # tokenid_src_train = "tokenid_src_adjust.pt"
