@@ -3,6 +3,7 @@
 
 00/
 00.sh
+00_.py
 
 data/model.log
 data/model_weight.pth
