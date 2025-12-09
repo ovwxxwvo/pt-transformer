@@ -1,12 +1,12 @@
 import os, pathlib, toml
 
 
-def assign(config):
+def create_variable(config):
     _path_data_dirt = config["dirt"]["data_dirt"]
     if not _path_data_dirt:
         _path_data_dirt = os.path.join(pathlib.Path(__file__).parent.parent, "data")
 
-    class Variables():
+    class Variable():
         def __init__(self):
             print(f"data_dirt : {self.path_data_dirt}")
             print("-" * 40)
@@ -122,6 +122,6 @@ def assign(config):
         bleu_stopper = None
 
 ##
-    return Variables
+    return Variable
 
 

@@ -1,7 +1,7 @@
 import os, pathlib, toml
 
 
-def load():
+def load_config():
     # path = os.path.dirname(os.path.abspath(sys.argv[0]))
     path = pathlib.Path(__file__).parent.parent
     conf_dirt = os.path.join(path, "config")

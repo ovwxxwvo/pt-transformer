@@ -3,7 +3,7 @@ import torch.optim as optim
 import torch.optim.lr_scheduler as sched
 from tokenizers import Tokenizer
 from tqdm import tqdm
-from utils import config, variable
+from utils import load_config, create_variable, init_logger
 from transformer.model import Transformer
 from transformer.utils import (
     DataHandler, MetricMeter, LossPenalizer, EarlyStopper, ModelHandler, )
@@ -12,7 +12,7 @@ from transformer.utils import (
 print("=" * 40)
 print(f"-- Config to Variable --")
 print("=" * 40)
-Variables = variable.assign(config.load())
+Variables = create_variable(load_config())
 
 def init() -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
     print("=" * 40)

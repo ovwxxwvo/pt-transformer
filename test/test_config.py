@@ -1,7 +1,7 @@
 import sys, pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
-from utils import config, variable
+from utils import load_config, create_variable
 
 
 def main():
@@ -9,7 +9,7 @@ def main():
     print("=" * 40)
 
     print()
-    Variable = variable.assign(config.load())
+    Variable = create_variable(load_config())
     v = Variable()
 
     print("\n🎉 Config & Variable test passed completely!")

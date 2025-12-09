@@ -1,6 +1,6 @@
 # -------------------------- Core: Version Identification (Only modify here when iterating) --------------------------
 # Version format: YYYY.MM.DD.patch (aligns with semantic versioning logic)
-# - YYYY.MM.DD: Main/minor version (marks core iteration date)
+# - YY.MM.DD: Main/minor version (marks core iteration date)
 # - patch: Revision version (increments for bug fixes/minor optimizations)
 # Version Status: stable/beta/dev (for environment distinction)
 __version__ = "25.12.01.0"
