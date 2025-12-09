@@ -5,6 +5,7 @@
 00.sh
 00_.py
 
+logs/
 data/model.log
 data/model_weight.pth
 data/model_weight_new.pth
