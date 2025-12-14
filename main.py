@@ -3,9 +3,9 @@ import torch.optim as optim
 import torch.optim.lr_scheduler as sched
 from tokenizers import Tokenizer
 from tqdm import tqdm
-from utils import load_config, create_variable, init_logger
-from transformer.model import Transformer
-from transformer.utils import (
+from utils import ( load_config, create_variable, init_logger,
+    model_logger, main_logger, server_logger, )
+from transformer import ( Transformer,
     DataHandler, MetricMeter, LossPenalizer, EarlyStopper, ModelHandler, )
 
 
@@ -45,6 +45,8 @@ def init() -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
         v.batch_size, v.shuffle_eval,
         )
 
+    main_logger.info("Data Initialized")
+
     # init model
     model:torch.nn.Module = Transformer(
         v.pad_id,
@@ -68,7 +70,9 @@ def init() -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
 
     mh = ModelHandler(model, device=v.device)
 
-    # model regulator
+    main_logger.info("Model Initialized")
+
+    # init regulator
     v.optimizer = optim.AdamW(
         model.parameters(),
         lr=v.optim_lr,
@@ -105,6 +109,8 @@ def init() -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
         delta=v.stop_delta_bleu,
         )
 
+    main_logger.info("Regulator Initialized")
+
     # return
     return v, model, dh, mh
 
@@ -130,11 +136,11 @@ def train(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
                 print(f"| loss={loss:.4f} | ids_pen={ids_pen:.4f}")
 
         print("-" * 40)
-        log_content = \
-            f" | Total: {e_total:02d}/{v.epoch_total:02d}" \
-            f" | Train: {e_train:02d}/{v.epoch_train:02d}" \
-            f" | loss: {loss:.4f}"
-        dh.save_log(log_content, v.path_model_log)
+        msg = \
+            f"Total: {e_total:02d}/{v.epoch_total:02d} | " \
+            f"Train: {e_train:02d}/{v.epoch_train:02d} | " \
+            f"loss: {loss:.4f}"
+        model_logger.info(msg)
         dh.save_model_weight(model, v.path_model_weight_new)
 
 def eval(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
@@ -159,11 +165,11 @@ def eval(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
                 print(f"| loss={loss:.4f} | bleu={bleu:.4f}")
 
         print("-" * 40)
-        log_content = \
-            f" | Total: {e_total:02d}/{v.epoch_total:02d}" \
-            f" | Eval:  {e_eval:02d}/{v.epoch_eval:02d}" \
-            f" | loss: {loss:.4f}" f" | bleu: {bleu:.4f}"
-        dh.save_log(log_content, v.path_model_log)
+        msg = \
+            f"Total: {e_total:02d}/{v.epoch_total:02d} | " \
+            f"Eval:  {e_eval:02d}/{v.epoch_eval:02d} | "   \
+            f"loss: {loss:.4f}" f" | bleu: {bleu:.4f}"
+        model_logger.info(msg)
         v.loss_stopper.track_metric(loss)
         v.bleu_stopper.track_metric(bleu)
         dh.save_model_weight(model, v.path_model_weight)
@@ -186,11 +192,10 @@ def infer(v:Variables, mh:ModelHandler):
 
 
 def main():
+    main_logger.info(f" {('-' * 50)}")
     v, m, dh, mh = init()
 
-    log_content = f" {('-' * 50)}"
-    dh.save_log(log_content, v.path_model_log)
-
+    model_logger.info(f" {('-' * 50)}")
     for e_total in range(1, v.epoch_total+1):
         print("#" * 50)
         if v.epoch_total > 1:

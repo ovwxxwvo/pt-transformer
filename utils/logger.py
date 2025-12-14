@@ -26,7 +26,7 @@ def init_logger(log_id):
     # Log format: Time | Version | Module:LineNo | Level | Message (traceable)
     formatter = logging.Formatter(
         "%(asctime)s | %(version)s | %(module)s:%(lineno)d | %(levelname)s | %(message)s",
-        datefmt="%Y.%m.%d %H:%M:%S"
+        datefmt="%Y-%m-%d %H:%M:%S"
         )
 
     # Console Handler: Output INFO+ (for development, filter redundant debug logs)
@@ -46,9 +46,15 @@ def init_logger(log_id):
         )
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(formatter)
-    file_handler.suffix="_%Y-%m-%d.log"
+    file_handler.suffix="%Y-%m-%d.log"
+    file_handler.namer = lambda name: name.replace(".", "_", 1)
     logger.addHandler(file_handler)
 
     return logger
+
+
+model_logger  = init_logger("model")
+main_logger   = init_logger("main")
+server_logger = init_logger("server")
 
 

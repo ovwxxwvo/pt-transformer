@@ -108,7 +108,7 @@ class Transformer(nn.Module):
         self.encodes = nn.ModuleList([EncodeLayer(d_model, n_heads, d_ff, src_dropout, enc_need_weight) for _ in range(enc_n_layers)])
         self.decodes = nn.ModuleList([DecodeLayer(d_model, n_heads, d_ff, tgt_dropout, dec_need_weight) for _ in range(dec_n_layers)])
         # print("=" * 40)
-        print(f"Transformer Model Initialized.")
+        # print(f"Transformer Model Initialized.")
         # print("=" * 40)
 
     def forward(self, x_src, x_tgt):

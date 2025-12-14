@@ -11,8 +11,8 @@ def main():
     print()
     logger = init_logger("test")
     # Test logs covering different levels (verify console + file output)
-    logger.debug("✅ Debug log: Written to file only, not displayed in console")
     logger.info("✅ Info log: Displayed in both console and file (commonly used for development)")
+    logger.debug("✅ Debug log: Written to file only, not displayed in console")
     logger.warning("⚠️ Warning log: Potential risk alert (e.g., mismatched parameters)")
     try:
         1 / 0  # Intentionally trigger exception to verify error log with traceback
