@@ -27,9 +27,12 @@ def load_config():
     data_dirt = config["dirt"]["data_dirt"]
     # print(data_dir)
 
-    print(f"conf_dirt : {conf_dirt}")
-    print(f"data_dirt : {data_dirt}")
-    print("-" * 40)
+    # print(f"conf_dirt : {conf_dirt}")
+    # print(f"data_dirt : {data_dirt}")
+    # print("-" * 40)
     return config
+
+
+config = load_config()
 
 

@@ -3,21 +3,17 @@ import torch.optim as optim
 import torch.optim.lr_scheduler as sched
 from tokenizers import Tokenizer
 from tqdm import tqdm
-from utils import ( load_config, create_variable, init_logger,
+from utils import ( Variables,
     model_logger, main_logger, server_logger, )
 from transformer import ( Transformer,
     DataHandler, MetricMeter, LossPenalizer, EarlyStopper, ModelHandler, )
 
 
-print("=" * 40)
-print(f"-- Config to Variable --")
-print("=" * 40)
-Variables = create_variable(load_config())
-
 def init() -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
     print("=" * 40)
     print(f"-- Transformer Model Initialization --")
     print("=" * 40)
+    # init variable
     v = Variables()
 
     # init data
@@ -192,10 +188,10 @@ def infer(v:Variables, mh:ModelHandler):
 
 
 def main():
-    main_logger.info(f" {('-' * 50)}")
+    main_logger.info(f"{('-' * 50)}")
     v, m, dh, mh = init()
 
-    model_logger.info(f" {('-' * 50)}")
+    model_logger.info(f"{('-' * 50)}")
     for e_total in range(1, v.epoch_total+1):
         print("#" * 50)
         if v.epoch_total > 1:

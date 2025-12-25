@@ -1,4 +1,5 @@
 import os, pathlib, toml
+from .config import config
 
 
 def create_variable(config):
@@ -6,35 +7,35 @@ def create_variable(config):
     if not _path_data_dirt:
         _path_data_dirt = os.path.join(pathlib.Path(__file__).parent.parent, "data")
 
-    class Variable():
-        def __init__(self):
-            print(f"data_dirt : {self.path_data_dirt}")
-            print("-" * 40)
-            print(
-                f"epoch_total={self.epoch_total:02d}",
-                "|",
-                f"epoch_train={self.epoch_train:02d}",
-                "|",
-                f"epoch_eval={self.epoch_eval:02d}",
-                )
-            print(
-                f"batch_size={self.batch_size}",
-                "|",
-                f"seq_len={self.seq_len}",
-                "|",
-                f"d_model={self.d_model}",
-                )
-            print(
-                f"n_heads={self.n_heads}",
-                "|",
-                f"enc_n_layers={self.enc_n_layers}",
-                "|",
-                f"dec_n_layers={self.dec_n_layers}",
-                )
-            print("-" * 40)
+    class Variables():
+        # def __init__(self):
+            # print(f"data_dirt : {self.path_data_dirt}")
+            # print("-" * 40)
+            # print(
+            #     f"epoch_total={self.epoch_total:02d}",
+            #     "|",
+            #     f"epoch_train={self.epoch_train:02d}",
+            #     "|",
+            #     f"epoch_eval={self.epoch_eval:02d}",
+            #     )
+            # print(
+            #     f"batch_size={self.batch_size}",
+            #     "|",
+            #     f"seq_len={self.seq_len}",
+            #     "|",
+            #     f"d_model={self.d_model}",
+            #     )
+            # print(
+            #     f"n_heads={self.n_heads}",
+            #     "|",
+            #     f"enc_n_layers={self.enc_n_layers}",
+            #     "|",
+            #     f"dec_n_layers={self.dec_n_layers}",
+            #     )
+            # print("-" * 40)
         path_data_dirt = _path_data_dirt
 
-# {{{ transformer
+    # {{{ transformer
         d_model      = config["transformer"]["d_model"]
         d_ff         = config["transformer"]["d_ff"]
         n_heads      = config["transformer"]["n_heads"]
@@ -47,7 +48,7 @@ def create_variable(config):
         src_vocab_size = config["transformer"]["src_vocab_size"]
         tgt_vocab_size = config["transformer"]["tgt_vocab_size"]
 
-# {{{ path
+    # {{{ path
         path_tokenid_src_train = os.path.join(path_data_dirt, config["file"]["tokenid_src_train"])
         path_tokenid_tgt_train = os.path.join(path_data_dirt, config["file"]["tokenid_tgt_train"])
         path_tokenid_src_eval  = os.path.join(path_data_dirt, config["file"]["tokenid_src_eval"] )
@@ -60,20 +61,20 @@ def create_variable(config):
         path_model_weight      = os.path.join(path_data_dirt, config["file"]["model_weight"]     )
         path_model_weight_new  = os.path.join(path_data_dirt, config["file"]["model_weight_new"] )
 
-# {{{ general
+    # {{{ general
         device    = config["general"]["device"]
         text      = config["general"]["text"]
         input_text  = config["general"]["input_text"]
         output_text = config["general"]["output_text"]
 
-# {{{ epoch
+    # {{{ epoch
         epoch_total = config["epoch"]["epoch_total"]
         epoch_train = config["epoch"]["epoch_train"]
         epoch_eval  = config["epoch"]["epoch_eval"]
         epoch_infer = config["epoch"]["epoch_infer"]
         current_epoch_total = config["epoch"]["current_epoch_total"]
 
-# {{{ general
+    # {{{ general
         unk_token = config["vocab"]["unk_token"]
         pad_token = config["vocab"]["pad_token"]
         sos_token = config["vocab"]["sos_token"]
@@ -83,7 +84,7 @@ def create_variable(config):
         sos_id    = config["vocab"]["sos_id"]
         eos_id    = config["vocab"]["eos_id"]
 
-# {{{ data
+    # {{{ data
         batch_size    = config["dataset"]["batch_size"]
         seq_len       = config["dataset"]["max_seq_len"]
         shuffle_train = config["dataset"]["shuffle_train"]
@@ -95,7 +96,7 @@ def create_variable(config):
         databatchs_train = config["dataset"]["databatchs_train"]
         databatchs_eval  = config["dataset"]["databatchs_eval"]
 
-# {{{ para
+    # {{{ para
         optim_lr            = float(config["optimizer"]["lr"]          )
         optim_weight_decay  = float(config["optimizer"]["weight_decay"])
         sched_min_lr        = float(config["scheduler"]["min_lr"]      )
@@ -113,7 +114,7 @@ def create_variable(config):
         stop_delta_loss     = config["stopper"]["delta_loss"]
         stop_delta_bleu     = config["stopper"]["delta_bleu"]
 
-# {{{ regulator
+    # {{{ regulator
         optimizer    = None
         scheduler    = None
         metricmeter  = None
@@ -121,7 +122,10 @@ def create_variable(config):
         loss_stopper = None
         bleu_stopper = None
 
-##
-    return Variable
+    ##
+    return Variables
+
+
+Variables = create_variable(config)
 
 
