@@ -10,11 +10,14 @@ from transformer import ( Transformer,
 
 
 def init() -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
-    print("=" * 40)
-    print(f"-- Transformer Model Initialization --")
-    print("=" * 40)
     # init variable
     v = Variables()
+
+    main_logger.info("Vars Initial ...")
+    main_logger.info(f"path_data_dirt={v.path_data_dirt}")
+    main_logger.info(f"total_epoch={v.epoch_total}, train_epoch={v.epoch_train}, eval_epoch={v.epoch_eval}")
+    main_logger.info(f"device={v.device}")
+    main_logger.info(f"{('-' * 50)}")
 
     # init data
     dh = DataHandler(v.path_data_dirt)
@@ -41,7 +44,10 @@ def init() -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
         v.batch_size, v.shuffle_eval,
         )
 
-    main_logger.info("Data Initialized")
+    main_logger.info("Data Initial ...")
+    main_logger.info(f"unk_id={v.unk_id}, pad_id={v.pad_id}, sos_id={v.sos_id}, eos_id={v.eos_id}")
+    main_logger.info(f"src_vocab_size={v.src_vocab_size}, tgt_vocab_size={v.tgt_vocab_size}")
+    main_logger.info(f"{('-' * 50)}")
 
     # init model
     model:torch.nn.Module = Transformer(
@@ -64,9 +70,17 @@ def init() -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
             map_location=v.device,
             ))
 
+
     mh = ModelHandler(model, device=v.device)
 
-    main_logger.info("Model Initialized")
+    main_logger.info("Model Initial ...")
+    main_logger.info(f"batch_size={v.batch_size}, max_seq_len={v.max_seq_len}, d_model={v.d_model}")
+    main_logger.info(f"n_heads={v.n_heads}, enc_n_layers={v.enc_n_layers}, dec_n_layers={v.dec_n_layers}")
+    if os.path.exists(v.path_model_weight):
+        main_logger.info(f"Loaded pre-trained model from {v.path_model_weight}")
+    else:
+        main_logger.info("No pre-trained model found, initializing model from scratch")
+    main_logger.info(f"{('-' * 50)}")
 
     # init regulator
     v.optimizer = optim.AdamW(
@@ -105,7 +119,10 @@ def init() -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
         delta=v.stop_delta_bleu,
         )
 
-    main_logger.info("Regulator Initialized")
+    main_logger.info("Regulator Initial ...")
+    main_logger.info(f"optem: lr={v.optim_lr}, weight_decay={v.optim_weight_decay}")
+    main_logger.info(f"sched: factor={v.sched_factor}, patience={v.sched_patience}, min_lr={v.sched_min_lr}")
+    main_logger.info(f"{('-' * 50)}")
 
     # return
     return v, model, dh, mh
@@ -113,7 +130,7 @@ def init() -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
 def train(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
     e_total = v.current_epoch_total
     for e_train in range(1, v.epoch_train+1):
-        print("=" * 40)
+        print("-" * 40)
         generator = mh.train_model(v.databatchs_train, v.optimizer, v.metricmeter, v.penalizer)
         for data in generator :
             if data["type"] == "init":
@@ -129,20 +146,19 @@ def train(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
                 pbar.close()
                 loss    = data["data"]["loss"]
                 ids_pen = data["data"]["ids_pen"]
-                print(f"| loss={loss:.4f} | ids_pen={ids_pen:.4f}")
+                # print(f"| loss={loss:.4f} | ids_pen={ids_pen:.4f}")
 
-        print("-" * 40)
         msg = \
             f"Total: {e_total:02d}/{v.epoch_total:02d} | " \
             f"Train: {e_train:02d}/{v.epoch_train:02d} | " \
-            f"loss: {loss:.4f}"
+            f"loss={loss:.4f}, ids_pen={ids_pen:.4f}"
         model_logger.info(msg)
         dh.save_model_weight(model, v.path_model_weight_new)
 
 def eval(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
     e_total = v.current_epoch_total
     for e_eval  in range(1, v.epoch_eval+1):
-        print("=" * 40)
+        print("-" * 40)
         generator = mh.eval_model(v.databatchs_eval, v.scheduler, v.metricmeter)
         for data in generator :
             if data["type"] == "init":
@@ -158,13 +174,12 @@ def eval(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
                 pbar.close()
                 loss = data["data"]["loss"]
                 bleu = data["data"]["bleu"]
-                print(f"| loss={loss:.4f} | bleu={bleu:.4f}")
+                # print(f"| loss={loss:.4f} | bleu={bleu:.4f}")
 
-        print("-" * 40)
         msg = \
             f"Total: {e_total:02d}/{v.epoch_total:02d} | " \
             f"Eval:  {e_eval:02d}/{v.epoch_eval:02d} | "   \
-            f"loss: {loss:.4f}" f" | bleu: {bleu:.4f}"
+            f"loss={loss:.4f}, bleu={bleu:.4f}"
         model_logger.info(msg)
         v.loss_stopper.track_metric(loss)
         v.bleu_stopper.track_metric(bleu)
@@ -172,19 +187,24 @@ def eval(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
 
 def infer(v:Variables, mh:ModelHandler):
     for e_infer in range(1, v.epoch_infer+1):
-        print("=" * 40)
-        print(f"Model Infer:")
-
         print("-" * 40)
-        print(v.text)
-        text_gen = mh.infer_model(v.text, v.seq_len,
+        # print(f"Model Infer:")
+
+        text_gen = mh.infer_model(v.text, v.max_seq_len,
             v.pad_id, v.unk_id, v.sos_id, v.eos_id,
             v.tokenizer_src,
             v.tokenizer_tgt,
             )
-        for word in text_gen :
-            print(word, end="", flush=True)
-        print()
+        # print(v.text)
+        # for word in text_gen :
+        #     print(word, end="", flush=True)
+        # print()
+
+        text_gen = "".join(list(text_gen))
+        print(f"Model Infer: {v.text} | {text_gen}")
+
+        msg = f"{v.text} | {text_gen}"
+        main_logger.info(msg)
 
 
 def main():
@@ -193,10 +213,14 @@ def main():
 
     model_logger.info(f"{('-' * 50)}")
     for e_total in range(1, v.epoch_total+1):
-        print("#" * 50)
+        print("=" * 80)
         if v.epoch_total > 1:
             v.current_epoch_total = e_total
 
+        msg = \
+            f"Total: {e_total:02d}/{v.epoch_total:02d} | " \
+            f"train & eval &　infer"
+        main_logger.info(msg)
         train(v, m, dh, mh)
         eval(v, m, dh, mh)
         infer(v, mh)

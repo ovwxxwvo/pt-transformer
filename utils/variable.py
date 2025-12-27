@@ -5,7 +5,8 @@ from .config import config
 def create_variable(config):
     _path_data_dirt = config["dirt"]["data_dirt"]
     if not _path_data_dirt:
-        _path_data_dirt = os.path.join(pathlib.Path(__file__).parent.parent, "data")
+        path = pathlib.Path(__file__).parent.parent
+        _path_data_dirt = os.path.join(path, "data")
 
     class Variables():
         # def __init__(self):
@@ -74,7 +75,7 @@ def create_variable(config):
         epoch_infer = config["epoch"]["epoch_infer"]
         current_epoch_total = config["epoch"]["current_epoch_total"]
 
-    # {{{ general
+    # {{{ vocab
         unk_token = config["vocab"]["unk_token"]
         pad_token = config["vocab"]["pad_token"]
         sos_token = config["vocab"]["sos_token"]
@@ -86,7 +87,7 @@ def create_variable(config):
 
     # {{{ data
         batch_size    = config["dataset"]["batch_size"]
-        seq_len       = config["dataset"]["max_seq_len"]
+        max_seq_len   = config["dataset"]["max_seq_len"]
         shuffle_train = config["dataset"]["shuffle_train"]
         shuffle_eval  = config["dataset"]["shuffle_eval"]
         tokenizer_src = config["dataset"]["tokenizer_src"]

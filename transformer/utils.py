@@ -15,25 +15,25 @@ class DataHandler():
         sos_id = tokenizer.token_to_id(sos_token)
         eos_id = tokenizer.token_to_id(eos_token)
         # print("tokenizer", tokenizer)
-        print(
-            f"pad_id={pad_id}", "|",
-            f"unk_id={unk_id}", "|",
-            f"sos_id={sos_id}", "|",
-            f"eos_id={eos_id}", "|",
-            )
+        # print(
+            # f"pad_id={pad_id}", "|",
+            # f"unk_id={unk_id}", "|",
+            # f"sos_id={sos_id}", "|",
+            # f"eos_id={eos_id}", "|",
+            # )
         return pad_id, unk_id, sos_id, eos_id
 
     def get_vocab_size(self, tokenizer):
         vocab_size = tokenizer.get_vocab_size()
-        print(f"vocab size : {vocab_size}")
+        # print(f"vocab size : {vocab_size}")
         # print("-" * 40)
         return vocab_size
 
     def reverse_vocab(self, tokenizer):
         vocab = tokenizer.get_vocab()
         new_vocab = {int(v): str(k) for k, v in vocab.items()}
-        print(f"Vocab reversed.")
-        print("-" * 40)
+        # print(f"Vocab reversed.")
+        # print("-" * 40)
         return new_vocab
 
     def batch_data(self,
@@ -43,8 +43,8 @@ class DataHandler():
             ):
         x_src = torch.load(path_tokenid_src)
         x_tgt = torch.load(path_tokenid_tgt)
-        print(f"src x shape : {tuple(x_src.shape)}")
-        print(f"tgt x shape : {tuple(x_tgt.shape)}")
+        # print(f"src x shape : {tuple(x_src.shape)}")
+        # print(f"tgt x shape : {tuple(x_tgt.shape)}")
         # print("-" * 40)
         # truncated_len = 128
         # x_src = x_src[:, :truncated_len]
@@ -53,8 +53,8 @@ class DataHandler():
         del x_src, x_tgt
         databatchs = DataLoader(dataset,
             batch_size=batch_size, shuffle=data_shuffle, drop_last=True)
-        print(f"Data batched.")
-        print("-" * 40)
+        # print(f"Data batched.")
+        # print("-" * 40)
         return databatchs
 
     def save_log(self, log_content, save_path=""):
@@ -67,7 +67,7 @@ class DataHandler():
         with open(save_path, "a", encoding="utf-8") as f:
             f.write(log_line)
         # print(f"{log_line.strip()}")
-        print(f"Model Log saved, {save_path}")
+        # print(f"Model Log saved, {save_path}")
 
     def save_model_weight(self, model, save_path=""):
         if not save_path:
@@ -75,7 +75,7 @@ class DataHandler():
             save_name="model_weight_new.pth"
             save_path = os.path.join(data_dir, save_name)
         torch.save(model.state_dict(), save_path)
-        print(f"Model Weights saved, {save_path}")
+        # print(f"Model Weights saved, {save_path}")
         # print("=" * 40)
 
     def check_tokenid(self, path_tokenid, id2word):
@@ -84,7 +84,7 @@ class DataHandler():
         text_gen = [id2word[id] for id in ids]
         text_gen = " ".join(text_gen)
         # print(ids)
-        print(text_gen)
+        # print(text_gen)
 
 class LossMeter():
     def __init__(self, pad_id, label_smoothing):
