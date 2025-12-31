@@ -1,17 +1,33 @@
-import os, sys
+import os
+import sqlite3
 
 
-def main():
-    path = [
-        "./transformer",
-        ]
+class TrainDB:
+    def __init__(self, db_path="data/pt_train.db"):
+        os.makedirs(os.path.dirname(db_path), exist_ok=True)
+        self.conn = sqlite3.connect(db_path)
+        self.conn.cursor().execute('''
+            CREATE TABLE IF NOT EXISTS train_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                epoch INTEGER,
+                loss REAL,
+                bleu REAL,
+                create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        self.conn.commit()
 
-    for p in path :
-        if p not in sys.path:
-            sys.path.append(path)
-            # print(p)
+    def save_log(self, epoch, loss, bleu):
+        self.conn.cursor().execute(
+            "INSERT INTO train_logs (epoch, loss, bleu) VALUES (?, ?, ?)",
+            (epoch, loss, bleu)
+        )
+        self.conn.commit()
+
+    def close(self):
+        self.conn.close()
 
 
-main()
+db = TrainDB()
 
 
