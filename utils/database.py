@@ -1,33 +1,12 @@
-import os
-import sqlite3
+import os, pathlib, sqlite3
+from datetime import datetime
+from .version import get_version_str
 
 
-class TrainDB:
-    def __init__(self, db_path="data/pt_train.db"):
-        os.makedirs(os.path.dirname(db_path), exist_ok=True)
-        self.conn = sqlite3.connect(db_path)
-        self.conn.cursor().execute('''
-            CREATE TABLE IF NOT EXISTS train_logs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                epoch INTEGER,
-                loss REAL,
-                bleu REAL,
-                create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-        self.conn.commit()
+proj_root = pathlib.Path(__file__).parent.parent
+db_dirt = os.path.join(proj_root, "database")
+db_file = os.path.join(db_dirt, "metric.db")
+os.makedirs(db_dirt, exist_ok=True)
 
-    def save_log(self, epoch, loss, bleu):
-        self.conn.cursor().execute(
-            "INSERT INTO train_logs (epoch, loss, bleu) VALUES (?, ?, ?)",
-            (epoch, loss, bleu)
-        )
-        self.conn.commit()
-
-    def close(self):
-        self.conn.close()
-
-
-db = TrainDB()
 
 

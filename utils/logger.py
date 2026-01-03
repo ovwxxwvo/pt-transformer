@@ -4,8 +4,8 @@ from .version import get_version_str
 
 
 proj_name = "pt-transformer"
-path = pathlib.Path(__file__).parent.parent
-log_dirt = os.path.join(path, "logs")
+proj_root = pathlib.Path(__file__).parent.parent
+log_dirt = os.path.join(proj_root, "logs")
 os.makedirs(log_dirt, exist_ok=True)
 
 class VersionFilter(logging.Filter):
@@ -16,6 +16,7 @@ class VersionFilter(logging.Filter):
 
 def init_logger(log_id):
     log_id = proj_name + "_" + log_id
+    log_file = os.path.join(log_dirt, log_id)
     logger = logging.getLogger(log_id)
     if logger.hasHandlers(): return logger
 
@@ -36,13 +37,12 @@ def init_logger(log_id):
     logger.addHandler(console_handler)
 
     # File Handler: Daily rotation, output DEBUG+ (persistent storage, keep 7 days)
-    log_file = os.path.join(log_dirt, log_id)
     file_handler = TimedRotatingFileHandler(
         filename=log_file,
-        when="D",               # Rotate by day
-        interval=1,             # x file per day
-        backupCount=3,          # Keep x days of logs
-        encoding="utf-8",       # Avoid Chinese garbled
+        when="D",          # Rotate by day
+        interval=1,        # x file per day
+        backupCount=3,     # Keep x days of logs
+        encoding="utf-8",  # Avoid Chinese garbled
         )
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(formatter)

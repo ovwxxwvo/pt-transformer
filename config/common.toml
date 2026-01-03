@@ -8,7 +8,7 @@
   output_text = ""
 
 [epoch]
-  epoch_total = 32
+  epoch_total = 8
   epoch_train = 1
   epoch_eval  = 1
   epoch_infer = 1

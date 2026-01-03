@@ -219,7 +219,7 @@ def main():
 
         msg = \
             f"Total: {e_total:02d}/{v.epoch_total:02d} | " \
-            f"train & eval &　infer"
+            f"train & eval & infer"
         main_logger.info(msg)
         train(v, m, dh, mh)
         eval(v, m, dh, mh)
