@@ -55,8 +55,8 @@ class MetricDB:
                 self._epoch_states[step_type]["last_global"] = max_val
 
     def insert_metric(self, step_type, current_epoch, total_epoch, loss, bleu=None):
-        if step_type not in ["train", "eval", "test"]:
-            raise ValueError(f"step_type must be train|eval|test")
+        if step_type not in ["test", "train", "eval"]:
+            raise ValueError(f"step_type must be test|train|eval")
 
         state = self._epoch_states[step_type]
         if step_type == "eval":
@@ -85,8 +85,8 @@ class MetricDB:
             raise e
 
     def query_metrics(self, step_type):
-        if step_type not in ["train", "eval", "test"]:
-            raise ValueError(f"step_type must be train|eval|test")
+        if step_type not in ["test", "train", "eval"]:
+            raise ValueError(f"step_type must be test|train|eval")
         query_sql = '''
         SELECT version, global_epoch, current_epoch, total_epoch, loss, bleu
         FROM metric
@@ -100,8 +100,8 @@ class MetricDB:
             return []
 
     def delete_metric(self, step_type):
-        if step_type not in ["train", "eval", "test"]:
-            raise ValueError(f"step_type must be train|eval|test")
+        if step_type not in ["test", "train", "eval"]:
+            raise ValueError(f"step_type must be test|train|eval")
         delete_sql = '''
         DELETE FROM metric WHERE step_type = ?
         '''

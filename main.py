@@ -4,7 +4,9 @@ import torch.optim.lr_scheduler as sched
 from tokenizers import Tokenizer
 from tqdm import tqdm
 from utils import ( Variables,
-    model_logger, main_logger, server_logger, )
+    model_logger, main_logger, server_logger,
+    get_metric_db,
+    )
 from transformer import ( Transformer,
     DataHandler, MetricMeter, LossPenalizer, EarlyStopper, ModelHandler, )
 
@@ -148,11 +150,15 @@ def train(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
                 ids_pen = data["data"]["ids_pen"]
                 # print(f"| loss={loss:.4f} | ids_pen={ids_pen:.4f}")
 
+        loss = round(loss, 4)
         msg = \
             f"Total: {e_total:02d}/{v.epoch_total:02d} | " \
             f"Train: {e_train:02d}/{v.epoch_train:02d} | " \
             f"loss={loss:.4f}, ids_pen={ids_pen:.4f}"
         model_logger.info(msg)
+        db = get_metric_db()
+        db.insert_metric(step_type="train", current_epoch=e_total, total_epoch=v.epoch_total, loss=loss, bleu=None)
+
         dh.save_model_weight(model, v.path_model_weight_new)
 
 def eval(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
@@ -176,11 +182,16 @@ def eval(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
                 bleu = data["data"]["bleu"]
                 # print(f"| loss={loss:.4f} | bleu={bleu:.4f}")
 
+        loss = round(loss, 4)
+        bleu = round(bleu, 4)
         msg = \
             f"Total: {e_total:02d}/{v.epoch_total:02d} | " \
             f"Eval:  {e_eval:02d}/{v.epoch_eval:02d} | "   \
             f"loss={loss:.4f}, bleu={bleu:.4f}"
         model_logger.info(msg)
+        db = get_metric_db()
+        db.insert_metric(step_type="eval", current_epoch=e_total, total_epoch=v.epoch_total, loss=loss, bleu=bleu)
+
         v.loss_stopper.track_metric(loss)
         v.bleu_stopper.track_metric(bleu)
         dh.save_model_weight(model, v.path_model_weight)
