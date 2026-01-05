@@ -10,6 +10,7 @@ database/
 data/model.log
 data/model_weight.pth
 data/model_weight_new.pth
+metric.html
 
 __pycache__/
 *.py[cod]
