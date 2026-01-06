@@ -5,8 +5,8 @@ from .version import get_version_str
 
 proj_name = "pt-transformer"
 proj_root = pathlib.Path(__file__).parent.parent
-log_dirt = os.path.join(proj_root, "logs")
-os.makedirs(log_dirt, exist_ok=True)
+log_dir   = os.path.join(proj_root, "logs")
+os.makedirs(log_dir, exist_ok=True)
 
 class VersionFilter(logging.Filter):
     def filter(self, record):
@@ -16,7 +16,8 @@ class VersionFilter(logging.Filter):
 
 def init_logger(log_id):
     log_id = proj_name + "_" + log_id
-    log_file = os.path.join(log_dirt, log_id)
+    log_file = os.path.join(log_dir, log_id)
+
     logger = logging.getLogger(log_id)
     if logger.hasHandlers(): return logger
 

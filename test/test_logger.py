@@ -1,11 +1,10 @@
 import sys, pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-
 from utils import init_logger
 
 
 def main():
-    print(f"-- Test Config & Variable --")
+    print(f"-- Test Logger Module --")
     print("=" * 40)
 
     print()
@@ -24,7 +23,7 @@ def main():
     print()
     logger.critical("🔥 Critical log: Fatal error (e.g., service startup failure)")
 
-    print("\n🎉 Logger test passed completely!")
+    print("\n🎉 Logger Module test passed completely!")
 
 
 if __name__ == "__main__":

@@ -3,14 +3,14 @@ from .config import config
 
 
 def create_variable(config):
-    _path_data_dirt = config["dirt"]["data_dirt"]
-    if not _path_data_dirt:
-        path = pathlib.Path(__file__).parent.parent
-        _path_data_dirt = os.path.join(path, "data")
+    _path_data_dir = config["dir"]["data_dir"]
+    if not _path_data_dir:
+        proj_root = pathlib.Path(__file__).parent.parent
+        _path_data_dir = os.path.join(proj_root, "data")
 
     class Variables():
         # def __init__(self):
-            # print(f"data_dirt : {self.path_data_dirt}")
+            # print(f"data_dir : {self.path_data_dir}")
             # print("-" * 40)
             # print(
             #     f"epoch_total={self.epoch_total:02d}",
@@ -34,7 +34,7 @@ def create_variable(config):
             #     f"dec_n_layers={self.dec_n_layers}",
             #     )
             # print("-" * 40)
-        path_data_dirt = _path_data_dirt
+        path_data_dir = _path_data_dir
 
     # {{{ transformer
         d_model      = config["transformer"]["d_model"]
@@ -50,17 +50,17 @@ def create_variable(config):
         tgt_vocab_size = config["transformer"]["tgt_vocab_size"]
 
     # {{{ path
-        path_tokenid_src_train = os.path.join(path_data_dirt, config["file"]["tokenid_src_train"])
-        path_tokenid_tgt_train = os.path.join(path_data_dirt, config["file"]["tokenid_tgt_train"])
-        path_tokenid_src_eval  = os.path.join(path_data_dirt, config["file"]["tokenid_src_eval"] )
-        path_tokenid_tgt_eval  = os.path.join(path_data_dirt, config["file"]["tokenid_tgt_eval"] )
-        path_vocab_src         = os.path.join(path_data_dirt, config["file"]["vocab_src"]        )
-        path_vocab_tgt         = os.path.join(path_data_dirt, config["file"]["vocab_tgt"]        )
-        path_tokenizer_src     = os.path.join(path_data_dirt, config["file"]["tokenizer_src"]    )
-        path_tokenizer_tgt     = os.path.join(path_data_dirt, config["file"]["tokenizer_tgt"]    )
-        path_model_log         = os.path.join(path_data_dirt, config["file"]["model_log"]        )
-        path_model_weight      = os.path.join(path_data_dirt, config["file"]["model_weight"]     )
-        path_model_weight_new  = os.path.join(path_data_dirt, config["file"]["model_weight_new"] )
+        path_tokenid_src_train = os.path.join(path_data_dir, config["file"]["tokenid_src_train"])
+        path_tokenid_tgt_train = os.path.join(path_data_dir, config["file"]["tokenid_tgt_train"])
+        path_tokenid_src_eval  = os.path.join(path_data_dir, config["file"]["tokenid_src_eval"] )
+        path_tokenid_tgt_eval  = os.path.join(path_data_dir, config["file"]["tokenid_tgt_eval"] )
+        path_vocab_src         = os.path.join(path_data_dir, config["file"]["vocab_src"]        )
+        path_vocab_tgt         = os.path.join(path_data_dir, config["file"]["vocab_tgt"]        )
+        path_tokenizer_src     = os.path.join(path_data_dir, config["file"]["tokenizer_src"]    )
+        path_tokenizer_tgt     = os.path.join(path_data_dir, config["file"]["tokenizer_tgt"]    )
+        path_model_log         = os.path.join(path_data_dir, config["file"]["model_log"]        )
+        path_model_weight      = os.path.join(path_data_dir, config["file"]["model_weight"]     )
+        path_model_weight_new  = os.path.join(path_data_dir, config["file"]["model_weight_new"] )
 
     # {{{ general
         device    = config["general"]["device"]

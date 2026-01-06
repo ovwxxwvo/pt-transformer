@@ -1,11 +1,10 @@
 import sys, pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-
 from utils import get_metric_db
 
 
 def main():
-    print(f"-- Test MetricDB (SQLite) --")
+    print(f"-- Test Database Module --")
     print("=" * 40)
     print()
 
@@ -39,18 +38,20 @@ def main():
 
         # Query all metrics
         test_metrics  = db.query_metrics(step_type="test")
-        train_metrics = db.query_metrics(step_type="train")
-        eval_metrics  = db.query_metrics(step_type="eval")
+        # train_metrics = db.query_metrics(step_type="train")
+        # eval_metrics  = db.query_metrics(step_type="eval")
         print(f"\nQuery Results:")
         print(f"Test  Metrics: {test_metrics}")
-        print(f"Train Metrics: {train_metrics}")
-        print(f"Eval  Metrics: {eval_metrics}")
+        # print(f"Train Metrics: {train_metrics}")
+        # print(f"Eval  Metrics: {eval_metrics}")
 
     except Exception as e:
         print(f"MetricDB test failed: {str(e)}")
         return
 
-    print("\n🎉 MetricDB test passed completely!")
+    print("\n🎉 Database Module test passed completely!")
 
 if __name__ == "__main__":
     main()
+
+

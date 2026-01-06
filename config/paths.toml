@@ -1,10 +1,10 @@
 # Transformer config,
 
 
-[dirt]
+[dir]
   # data_dirt = ""
-  data_dirt = "./data/"
-  log_dirt  = "./log/"
+  # log_dir  = "./log/"
+  data_dir = "./data/"
 
 [file]
   # tokenid_src_train = "tokenid_src_adjust.pt"

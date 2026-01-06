@@ -1,28 +1,30 @@
-import os, torch
+import os, argparse, torch
 import torch.optim as optim
 import torch.optim.lr_scheduler as sched
 from tokenizers import Tokenizer
 from tqdm import tqdm
-from utils import ( Variables,
-    model_logger, main_logger, server_logger,
-    get_metric_db,
-    )
 from transformer import ( Transformer,
     DataHandler, MetricMeter, LossPenalizer, EarlyStopper, ModelHandler, )
+from utils import ( Variables,
+    model_logger, main_logger, server_logger,
+    get_metric_db, parse_cli_args,
+    )
 
 
-def init() -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
+def init(args:argparse.Namespace) -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
     # init variable
     v = Variables()
+    if args.epoch_total is not None:
+        v.epoch_total = args.epoch_total
 
     main_logger.info("Vars Initial ...")
-    main_logger.info(f"path_data_dirt={v.path_data_dirt}")
+    main_logger.info(f"path_data_dir={v.path_data_dir}")
     main_logger.info(f"total_epoch={v.epoch_total}, train_epoch={v.epoch_train}, eval_epoch={v.epoch_eval}")
     main_logger.info(f"device={v.device}")
     main_logger.info(f"{('-' * 50)}")
 
     # init data
-    dh = DataHandler(v.path_data_dirt)
+    dh = DataHandler(v.path_data_dir)
 
     v.tokenizer_src = Tokenizer.from_file(v.path_tokenizer_src)
     v.tokenizer_tgt = Tokenizer.from_file(v.path_tokenizer_tgt)
@@ -211,17 +213,13 @@ def infer(v:Variables, mh:ModelHandler):
         #     print(word, end="", flush=True)
         # print()
 
-        text_gen = "".join(list(text_gen))
+        text_gen = "".join(list(text_gen)) if text_gen else ""
         print(f"Model Infer: {v.text} | {text_gen}")
 
         msg = f"{v.text} | {text_gen}"
         main_logger.info(msg)
 
-
-def main():
-    main_logger.info(f"{('-' * 50)}")
-    v, m, dh, mh = init()
-
+def pipeline(v:Variables, m:Transformer, dh:DataHandler, mh:ModelHandler):
     model_logger.info(f"{('-' * 50)}")
     for e_total in range(1, v.epoch_total+1):
         print("=" * 80)
@@ -235,6 +233,24 @@ def main():
         train(v, m, dh, mh)
         eval(v, m, dh, mh)
         infer(v, mh)
+
+def main():
+    args = parse_cli_args()
+
+    main_logger.info(f"{('-' * 50)}")
+    v, m, dh, mh = init(args)
+
+    match args.mode:
+        case "all":
+            pipeline(v, m, dh, mh)
+        case "train":
+            train(v, m, dh, mh)
+        case "eval":
+            eval(v, m, dh, mh)
+        case "infer":
+            infer(v, mh)
+        case _:
+            raise ValueError(f"Unsupported mode: {args.mode}")
 
 
 if __name__ == "__main__":
