@@ -14,8 +14,10 @@ from utils import ( Variables,
 def init(args:argparse.Namespace) -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
     # init variable
     v = Variables()
-    if args.epoch_total is not None:
-        v.epoch_total = args.epoch_total
+    if args.epoch_total is not None: v.epoch_total = args.epoch_total
+    if args.epoch_train is not None: v.epoch_train = args.epoch_train
+    if args.epoch_eval  is not None: v.epoch_eval  = args.epoch_eval
+    if args.epoch_infer is not None: v.epoch_infer = args.epoch_infer
 
     main_logger.info("Vars Initial ...")
     main_logger.info(f"path_data_dir={v.path_data_dir}")

@@ -47,7 +47,22 @@ def parse_cli_args():
     parser.add_argument(
         "--epoch-total",
         type=int,
-        help="Total number of training epochs for the whole training process"
+        help="Total number of pipeline epochs"
+        )
+    parser.add_argument(
+        "--epoch-train",
+        type=int,
+        help="Total number of train epochs"
+        )
+    parser.add_argument(
+        "--epoch-eval",
+        type=int,
+        help="Total number of eval epochs"
+        )
+    parser.add_argument(
+        "--epoch-infer",
+        type=int,
+        help="Total number of infer epochs"
         )
 
     return parser.parse_args()
