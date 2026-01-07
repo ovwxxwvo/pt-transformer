@@ -6,7 +6,7 @@ Transformer model implemented with PyTorch.
 ----  
 ```  
 .  
-├── transformer  
+├── transformer/  
 │   ├── nn_ext.py ( FeedForwardNetwork, MaskGenerator, ... )  
 │   ├── model.py  ( EncodeLayer, DecodeLayer, InputLayer, OutputLayer, Transformer )  
 │   └── utils.py  ( DataHandler, ModelHandler, MetricMeter, LossPenalizer, EarlyStopper, ... )  
@@ -16,7 +16,7 @@ Transformer model implemented with PyTorch.
 │       ├── LossPenalizer (IdsPenalizer|...)  
 │       └── EarlyStopper  (EarlyStopper(loss)|EarlyStopper(bleu)|...)  
 │  
-├── utils  
+├── utils/  
 │   ├── version.py  ( semantic versioning module )  
 │   ├── config.py   ( toml-based config module )  
 │   ├── variable.py ( config to variable module )  
