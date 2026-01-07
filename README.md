@@ -10,11 +10,11 @@ Transformer model implemented with PyTorch.
 │   ├── nn_ext.py ( FeedForwardNetwork, MaskGenerator, ... )  
 │   ├── model.py  ( EncodeLayer, DecodeLayer, InputLayer, OutputLayer, Transformer. )  
 │   └── utils.py  ( DataHandler, ModelHandler, MetricMeter, LossPenalizer, EarlyStopper, ... )  
-│       ├── DataHandler (reverse_vocab|batch_data|save_model_weight|...)  
-│       ├── ModeHandler (train_model|eval_model|infer_model)  
-│       ├── MetricMeter (LossMeter|BleuMeter|...)  
+│       ├── DataHandler   (reverse_vocab|batch_data|save_model_weight|...)  
+│       ├── ModeHandler   (train_model|eval_model|infer_model)  
+│       ├── MetricMeter   (LossMeter|BleuMeter|...)  
 │       ├── LossPenalizer (IdsPenalizer|...)  
-│       └── EarlyStopper (EarlyStopper(loss)|EarlyStopper(bleu)|...)  
+│       └── EarlyStopper  (EarlyStopper(loss)|EarlyStopper(bleu)|...)  
 │  
 ├── utils  
 │   ├── version.py  ( semantic versioning module )  
