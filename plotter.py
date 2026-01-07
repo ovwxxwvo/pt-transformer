@@ -20,13 +20,13 @@ class MetricPlotter:
         self.eval_data = self.db.query_metrics("eval")
 
     def _parse_metrics(self):
-        self.train_epochs = [row[1] for row in self.train_data]
-        self.train_loss = [row[4] for row in self.train_data]
-        self.train_bleu = [row[5] for row in self.train_data]
+        self.train_epochs = [row[0] for row in self.train_data]
+        self.train_loss = [row[7] for row in self.train_data]
+        self.train_bleu = [row[8] for row in self.train_data]
 
-        self.eval_epochs = [row[1] for row in self.eval_data]
-        self.eval_loss = [row[4] for row in self.eval_data]
-        self.eval_bleu = [row[5] for row in self.eval_data]
+        self.eval_epochs = [row[0] for row in self.eval_data]
+        self.eval_loss = [row[7] for row in self.eval_data]
+        self.eval_bleu = [row[8] for row in self.eval_data]
 
     def create_plots(self):
         # Create subplots with 2 independent legends, vertical spacing 0.15

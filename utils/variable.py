@@ -69,11 +69,11 @@ def create_variable(config):
         output_text = config["general"]["output_text"]
 
     # {{{ epoch
-        epoch_total = config["epoch"]["epoch_total"]
-        epoch_train = config["epoch"]["epoch_train"]
-        epoch_eval  = config["epoch"]["epoch_eval"]
-        epoch_infer = config["epoch"]["epoch_infer"]
-        current_epoch_total = config["epoch"]["current_epoch_total"]
+        current_epoch = config["epoch"]["current_epoch"]
+        total_stage_epoch = config["epoch"]["total_stage_epoch"]
+        total_train_epoch = config["epoch"]["total_train_epoch"]
+        total_eval_epoch  = config["epoch"]["total_eval_epoch"]
+        total_infer_epoch = config["epoch"]["total_infer_epoch"]
 
     # {{{ vocab
         unk_token = config["vocab"]["unk_token"]

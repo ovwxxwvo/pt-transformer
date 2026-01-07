@@ -45,22 +45,22 @@ def parse_cli_args():
 
     # General hyperparameter
     parser.add_argument(
-        "--epoch-total",
+        "--total-stage-epoch",
         type=int,
         help="Total number of pipeline epochs"
         )
     parser.add_argument(
-        "--epoch-train",
+        "--total-train-epoch",
         type=int,
         help="Total number of train epochs"
         )
     parser.add_argument(
-        "--epoch-eval",
+        "--total-eval-epoch",
         type=int,
         help="Total number of eval epochs"
         )
     parser.add_argument(
-        "--epoch-infer",
+        "--total-infer-epoch",
         type=int,
         help="Total number of infer epochs"
         )

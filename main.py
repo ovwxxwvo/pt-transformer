@@ -14,14 +14,16 @@ from utils import ( Variables,
 def init(args:argparse.Namespace) -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
     # init variable
     v = Variables()
-    if args.epoch_total is not None: v.epoch_total = args.epoch_total
-    if args.epoch_train is not None: v.epoch_train = args.epoch_train
-    if args.epoch_eval  is not None: v.epoch_eval  = args.epoch_eval
-    if args.epoch_infer is not None: v.epoch_infer = args.epoch_infer
+    if args.total_stage_epoch is not None: v.total_stage_epoch = args.total_stage_epoch
+    if args.total_train_epoch is not None: v.total_train_epoch = args.total_train_epoch
+    if args.total_eval_epoch  is not None: v.total_eval_epoch  = args.total_eval_epoch
+    if args.total_infer_epoch is not None: v.total_infer_epoch = args.total_infer_epoch
 
     main_logger.info("Vars Initial ...")
     main_logger.info(f"path_data_dir={v.path_data_dir}")
-    main_logger.info(f"total_epoch={v.epoch_total}, train_epoch={v.epoch_train}, eval_epoch={v.epoch_eval}")
+    main_logger.info(
+        f"total_stage_epoch={v.total_stage_epoch}, total_train_epoch={v.total_train_epoch}, total_eval_epoch={v.total_eval_epoch}" \
+        )
     main_logger.info(f"device={v.device}")
     main_logger.info(f"{('-' * 50)}")
 
@@ -134,8 +136,11 @@ def init(args:argparse.Namespace) -> tuple[Variables, Transformer, DataHandler, 
     return v, model, dh, mh
 
 def train(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
-    e_total = v.current_epoch_total
-    for e_train in range(1, v.epoch_train+1):
+    stage_epoch = v.current_epoch
+    total_stage_epoch = v.total_stage_epoch
+    total_task_epoch  = v.total_train_epoch
+
+    for epoch in range(1, total_task_epoch+1):
         print("-" * 40)
         generator = mh.train_model(v.databatchs_train, v.optimizer, v.metricmeter, v.penalizer)
         for data in generator :
@@ -156,18 +161,25 @@ def train(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
 
         loss = round(loss, 4)
         msg = \
-            f"Total: {e_total:02d}/{v.epoch_total:02d} | " \
-            f"Train: {e_train:02d}/{v.epoch_train:02d} | " \
+            f"Stage: {stage_epoch:02d}/{total_stage_epoch:02d} | " \
+            f"Train: {epoch:02d}/{total_task_epoch:02d} | " \
             f"loss={loss:.4f}, ids_pen={ids_pen:.4f}"
         model_logger.info(msg)
+
         db = get_metric_db()
-        db.insert_metric(step_type="train", current_epoch=e_total, total_epoch=v.epoch_total, loss=loss, bleu=None)
+        db.insert_metric(step_type="train",
+            stage_epoch=stage_epoch, total_stage_epoch=total_stage_epoch,
+            task_epoch=epoch, total_task_epoch=total_task_epoch,
+            loss=loss, bleu=None )
 
         dh.save_model_weight(model, v.path_model_weight_new)
 
 def eval(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
-    e_total = v.current_epoch_total
-    for e_eval  in range(1, v.epoch_eval+1):
+    stage_epoch = v.current_epoch
+    total_stage_epoch = v.total_stage_epoch
+    total_task_epoch  = v.total_eval_epoch
+
+    for epoch in range(1, total_task_epoch+1):
         print("-" * 40)
         generator = mh.eval_model(v.databatchs_eval, v.scheduler, v.metricmeter)
         for data in generator :
@@ -189,19 +201,27 @@ def eval(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
         loss = round(loss, 4)
         bleu = round(bleu, 4)
         msg = \
-            f"Total: {e_total:02d}/{v.epoch_total:02d} | " \
-            f"Eval:  {e_eval:02d}/{v.epoch_eval:02d} | "   \
+            f"Stage: {stage_epoch:02d}/{total_stage_epoch:02d} | " \
+            f"Eval:  {epoch:02d}/{total_task_epoch:02d} | " \
             f"loss={loss:.4f}, bleu={bleu:.4f}"
         model_logger.info(msg)
+
         db = get_metric_db()
-        db.insert_metric(step_type="eval", current_epoch=e_total, total_epoch=v.epoch_total, loss=loss, bleu=bleu)
+        db.insert_metric(step_type="eval",
+            stage_epoch=stage_epoch, total_stage_epoch=total_stage_epoch,
+            task_epoch=epoch, total_task_epoch=total_task_epoch,
+            loss=loss, bleu=bleu )
 
         v.loss_stopper.track_metric(loss)
         v.bleu_stopper.track_metric(bleu)
         dh.save_model_weight(model, v.path_model_weight)
 
 def infer(v:Variables, mh:ModelHandler):
-    for e_infer in range(1, v.epoch_infer+1):
+    # stage_epoch = v.current_epoch
+    # total_stage_epoch = v.total_stage_epoch
+    total_task_epoch  = v.total_infer_epoch
+
+    for epoch in range(1, total_task_epoch+1):
         print("-" * 40)
         # print(f"Model Infer:")
 
@@ -223,15 +243,16 @@ def infer(v:Variables, mh:ModelHandler):
 
 def pipeline(v:Variables, m:Transformer, dh:DataHandler, mh:ModelHandler):
     model_logger.info(f"{('-' * 50)}")
-    for e_total in range(1, v.epoch_total+1):
-        print("=" * 80)
-        if v.epoch_total > 1:
-            v.current_epoch_total = e_total
+    total_stage_epoch = v.total_stage_epoch
 
+    for epoch in range(1, total_stage_epoch+1):
+        print("=" * 80)
+        v.current_epoch = epoch
         msg = \
-            f"Total: {e_total:02d}/{v.epoch_total:02d} | " \
+            f"Total: {epoch:02d}/{total_stage_epoch:02d} | " \
             f"train & eval & infer"
         main_logger.info(msg)
+
         train(v, m, dh, mh)
         eval(v, m, dh, mh)
         infer(v, mh)
@@ -246,16 +267,13 @@ def main():
         case "all":
             pipeline(v, m, dh, mh)
         case "train":
-            v.current_epoch_total = 0
-            v.epoch_total = 0
+            v.current_epoch = 0; v.total_stage_epoch = 0
             train(v, m, dh, mh)
         case "eval":
-            v.current_epoch_total = 0
-            v.epoch_total = 0
+            v.current_epoch = 0; v.total_stage_epoch = 0
             eval(v, m, dh, mh)
         case "infer":
-            v.current_epoch_total = 0
-            v.epoch_total = 0
+            v.current_epoch = 0; v.total_stage_epoch = 0
             infer(v, mh)
         case _:
             raise ValueError(f"Unsupported mode: {args.mode}")

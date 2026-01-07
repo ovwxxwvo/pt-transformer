@@ -29,15 +29,18 @@ class MetricDB:
     def _create_table(self):
         create_sql = '''
         CREATE TABLE IF NOT EXISTS metric (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER,
             step_type TEXT NOT NULL,
             record_time DATETIME DEFAULT CURRENT_TIMESTAMP,
             version TEXT NOT NULL,
             global_epoch INTEGER NOT NULL,
-            current_epoch INTEGER NOT NULL,
-            total_epoch INTEGER NOT NULL,
+            stage_epoch INTEGER NOT NULL,
+            total_stage_epoch INTEGER NOT NULL,
+            task_epoch INTEGER NOT NULL,
+            total_task_epoch INTEGER NOT NULL,
             loss REAL,
-            bleu REAL
+            bleu REAL,
+            PRIMARY KEY (id)
         )
         '''
         try:
@@ -55,7 +58,7 @@ class MetricDB:
             if max_val is not None:
                 self._epoch_states[step_type]["last_global"] = max_val
 
-    def insert_metric(self, step_type, current_epoch, total_epoch, loss, bleu=None):
+    def insert_metric(self, step_type, stage_epoch, total_stage_epoch, task_epoch, total_task_epoch, loss, bleu=None):
         if step_type not in ["test", "train", "eval"]:
             raise ValueError(f"step_type must be test|train|eval")
 
@@ -72,13 +75,14 @@ class MetricDB:
         version = get_version_str()
         insert_sql = '''
         INSERT INTO metric
-        (step_type, version, global_epoch, current_epoch, total_epoch, loss, bleu)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        (step_type, version, global_epoch, stage_epoch, total_stage_epoch, task_epoch, total_task_epoch, loss, bleu)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         '''
         try:
             self.conn.execute(insert_sql, (
                 step_type, version, global_epoch,
-                current_epoch, total_epoch, loss, bleu
+                stage_epoch, total_stage_epoch, task_epoch, total_task_epoch,
+                loss, bleu
             ))
             self.conn.commit()
             if step_type in ["train", "test"]:
@@ -91,7 +95,7 @@ class MetricDB:
         if step_type not in ["test", "train", "eval"]:
             raise ValueError(f"step_type must be test|train|eval")
         query_sql = '''
-        SELECT version, global_epoch, current_epoch, total_epoch, loss, bleu
+        SELECT global_epoch, record_time, version, stage_epoch, total_stage_epoch, task_epoch, total_task_epoch, loss, bleu
         FROM metric
         WHERE step_type = ?
         ORDER BY global_epoch ASC
