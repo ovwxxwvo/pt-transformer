@@ -8,21 +8,21 @@ Transformer model implemented with PyTorch.
 .  
 ├── transformer  
 │   ├── nn_ext.py ( FeedForwardNetwork, MaskGenerator, ... )  
-│   ├── model.py  ( EncodeLayer, DecodeLayer, InputLayer, OutputLayer, Transformer. )  
+│   ├── model.py  ( EncodeLayer, DecodeLayer, InputLayer, OutputLayer, Transformer )  
 │   └── utils.py  ( DataHandler, ModelHandler, MetricMeter, LossPenalizer, EarlyStopper, ... )  
 │       ├── DataHandler   (reverse_vocab|batch_data|save_model_weight|...)  
-│       ├── ModeHandler   (train_model|eval_model|infer_model)  
+│       ├── ModelHandler  (train_model|eval_model|infer_model)  
 │       ├── MetricMeter   (LossMeter|BleuMeter|...)  
 │       ├── LossPenalizer (IdsPenalizer|...)  
 │       └── EarlyStopper  (EarlyStopper(loss)|EarlyStopper(bleu)|...)  
 │  
 ├── utils  
 │   ├── version.py  ( semantic versioning module )  
-│   ├── config.py   ( toml based config module )  
+│   ├── config.py   ( toml-based config module )  
 │   ├── variable.py ( config to variable module )  
-│   ├── logger.py   ( logging based logger module )  
-│   ├── database.py ( sqlite based database module )  
-│   └── cli.py      ( argparse based cli module )  
+│   ├── logger.py   ( logging-based logger module )  
+│   ├── database.py ( sqlite-based database module )  
+│   └── cli.py      ( argparse-based cli module )  
 │  
 ├── data/    ( text, tokenizer, vocab, tokenid, model-weight )  
 ├── scripts/ ( process_txt, tokenize_txt )  
