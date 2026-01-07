@@ -29,14 +29,15 @@ class MetricDB:
     def _create_table(self):
         create_sql = '''
         CREATE TABLE IF NOT EXISTS metric (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             step_type TEXT NOT NULL,
+            record_time DATETIME DEFAULT CURRENT_TIMESTAMP,
             version TEXT NOT NULL,
             global_epoch INTEGER NOT NULL,
             current_epoch INTEGER NOT NULL,
             total_epoch INTEGER NOT NULL,
             loss REAL,
-            bleu REAL,
-            PRIMARY KEY (step_type, global_epoch)
+            bleu REAL
         )
         '''
         try:
@@ -59,12 +60,14 @@ class MetricDB:
             raise ValueError(f"step_type must be test|train|eval")
 
         state = self._epoch_states[step_type]
-        if step_type == "eval":
-            global_epoch = self._epoch_states["train"]["last_global"]
+        if step_type == "test":
+            global_epoch = state["last_global"] + 1
         elif step_type == "train":
             global_epoch = state["last_global"] + 1
+        elif step_type == "eval":
+            global_epoch = self._epoch_states["train"]["last_global"]
         else:
-            global_epoch = state["last_global"] + 1
+            global_epoch = 0
 
         version = get_version_str()
         insert_sql = '''

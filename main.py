@@ -246,10 +246,16 @@ def main():
         case "all":
             pipeline(v, m, dh, mh)
         case "train":
+            v.current_epoch_total = 0
+            v.epoch_total = 0
             train(v, m, dh, mh)
         case "eval":
+            v.current_epoch_total = 0
+            v.epoch_total = 0
             eval(v, m, dh, mh)
         case "infer":
+            v.current_epoch_total = 0
+            v.epoch_total = 0
             infer(v, mh)
         case _:
             raise ValueError(f"Unsupported mode: {args.mode}")
