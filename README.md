@@ -17,12 +17,12 @@ Transformer model implemented with PyTorch.
 │       └── EarlyStopper  (EarlyStopper(loss)|EarlyStopper(bleu)|...)  
 │  
 ├── utils/  
-│   ├── version.py  ( semantic versioning module )  
-│   ├── config.py   ( toml-based config module )  
-│   ├── variable.py ( config to variable module )  
-│   ├── logger.py   ( logging-based logger module )  
-│   ├── database.py ( sqlite-based database module )  
-│   └── cli.py      ( argparse-based cli module )  
+│   ├── version.py  ( semantic versioning module, with YY.MM.DD.patch schema )  
+│   ├── config.py   ( toml-based config module, loads config files to dict )  
+│   ├── variable.py ( config to variable module, convert config dict to usable variable )  
+│   ├── logger.py   ( logging-based logger module, records model|main|server logs )  
+│   ├── database.py ( sqlite-based database module, stores loss|bleu metrics data )  
+│   └── cli.py      ( argparse-based cli module, parses command-line arguments )  
 │  
 ├── data/    ( text, tokenizer, vocab, tokenid, model-weight )  
 ├── scripts/ ( process_txt, tokenize_txt )  
@@ -47,7 +47,7 @@ Transformer model implemented with PyTorch.
 
 Clone the repo to your project dir :  
 ```  
-git archive --remote=https://github.com/ovwxxwvo/pt-transformer.git master transformer/ | tar -x -C ./  
+git clone https://github.com/ovwxxwvo/pt-transformer.git  
 ```  
 
 ----  
