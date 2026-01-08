@@ -47,7 +47,12 @@ Transformer model implemented with PyTorch.
 
 Clone the repo to your project dir :  
 ```  
-git clone https://github.com/ovwxxwvo/pt-transformer.git  
+git clone https://github.com/ovwxxwvo/pt-transformer.git && cd pt-transformer  
+```  
+Built & Run docker :  
+```  
+docker build -t pt-transformer:v1 .  
+docker run -p 8000:8000 -p 7860:7860 -v $(pwd)/data:/app/data pt-transformer:v1  
 ```  
 
 ----  
