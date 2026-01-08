@@ -4,12 +4,12 @@ A lightweight learning demo of Transformer model implemented with PyTorch.
 Implements an end-to-end translation pipeline, dual deployment modes, metric visualizations, etc.  
 
 ### 🔧 Features 特性  
-- Provides practical utility modules( data handling, model handling, metric tracking, loss penalizing, early stopping, etc ) to streamline workflow.  
+- Provides practical utility modules ( data handling, model handling, metric tracking, loss penalizing, early stopping, etc ) to streamline workflow.  
 - Uses 100 English-Chinese text translation pairs to verify the full pipeline of training|evaluation|inference.  
 - Tokenizes original text data by scripts to generate the tokenizer|vocab|tokenid.  
 - Tests core modules (mask|model|version|config|variable|logger|database|cli).  
 - Configures with a main config file & related sub-config files.  
-- Parses command-line arguments(mode|epoch) with simplicity.  
+- Parses command-line arguments (mode|epoch) with simplicity.  
 - Visualizes LOSS & BLEU metrics via web browser, with metrics fetched from the database.  
 - Runs directly locally, or is deployed with an API backend server to serve both terminal clients & webrowser clients.  
 
@@ -48,7 +48,8 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 ├── server.py   ( uvicorn-based server )  
 ├── termui.py   ( textual-based terminal client )  
 ├── webui.py    ( gradio-based webrowser client )  
-└── server.sh   ( script for run server )  
+│  
+└── server.sh   ( script to run the backend server )  
 ```  
 
 ----  
@@ -78,6 +79,11 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install --upgrade pip && pip install -r requirements.txt  
 # Start the service  
 bash server.sh  
+```  
+
+Open web browser and visit:  
+```  
+http://localhost:7860  
 ```  
 
 ----  
