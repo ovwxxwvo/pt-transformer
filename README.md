@@ -5,7 +5,8 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 
 ----  
 ### 🔧 Features 特性  
-- Provides practical utility modules ( data handling, model handling, metric tracking, loss penalizing, early stopping, etc ) to streamline workflow.  
+- Provides practical utility modules to streamline workflow.  
+  ( data handling, model handling, metric tracking, loss penalizing, early stopping, etc )  
 - Uses 100 English-Chinese text translation pairs to verify the full pipeline of training|evaluation|inference.  
 - Tokenizes original text data by scripts to generate the tokenizer|vocab|tokenid.  
 - Tests core modules (mask|model|version|config|variable|logger|database|cli).  
