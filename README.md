@@ -49,10 +49,23 @@ Clone the repo to your project dir :
 ```  
 git clone https://github.com/ovwxxwvo/pt-transformer.git && cd pt-transformer  
 ```  
-Built & Run docker :  
+
+Option 1: Run in Docker  
 ```  
+# Build docker  
 docker build -t pt-transformer:v1 .  
+# Run docker  
 docker run -p 8000:8000 -p 7860:7860 -v $(pwd)/data:/app/data pt-transformer:v1  
+```  
+
+Option 2: Run with Local Python(3.11+) Environment  
+```  
+# Create and activate a virtual environment  
+python3 -m venv .venv && source .venv/bin/activate  
+# Install dependencies  
+pip install --upgrade pip && pip install -r requirements.txt  
+# Start the service  
+bash server.sh  
 ```  
 
 ----  
