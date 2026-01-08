@@ -3,6 +3,7 @@
 A lightweight learning demo of Transformer model implemented with PyTorch.  
 Implements an end-to-end translation pipeline, dual deployment modes, metric visualizations, etc.  
 
+----  
 ### 🔧 Features 特性  
 - Provides practical utility modules ( data handling, model handling, metric tracking, loss penalizing, early stopping, etc ) to streamline workflow.  
 - Uses 100 English-Chinese text translation pairs to verify the full pipeline of training|evaluation|inference.  
@@ -13,8 +14,8 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 - Visualizes LOSS & BLEU metrics via web browser, with metrics fetched from the database.  
 - Runs directly locally, or is deployed with an API backend server to serve both terminal clients & webrowser clients.  
 
-### 🧩 Modules 模块  
 ----  
+### 🧩 Modules 模块  
 ```  
 .  
 ├── transformer/  
@@ -53,7 +54,6 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 ```  
 
 ----  
-
 ### 📦 Installation 安装  
 
 #### Install manually 手动安装 (linux)  
