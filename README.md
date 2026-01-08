@@ -1,6 +1,6 @@
 ## PyTorch Transformer  
 
-Transformer model implemented with PyTorch.  
+Transformer model demo implemented with PyTorch.  
 
 ### 🧩 Modules 模块  
 ----  
