@@ -1,6 +1,17 @@
-## PyTorch Transformer  
+## PyTorch Transformer Model  
 
-Transformer model demo implemented with PyTorch.  
+A lightweight learning demo of Transformer model implemented with PyTorch.  
+Implements an end-to-end translation pipeline, dual deployment modes, metric visualizations, etc.  
+
+### 🔧 Features 特性  
+- Provides practical utility modules( data handling, model handling, metric tracking, loss penalizing, early stopping, etc ) to streamline workflow.  
+- Uses 100 English-Chinese text translation pairs to verify the full pipeline of training|evaluation|inference.  
+- Tokenizes original text data by scripts to generate the tokenizer|vocab|tokenid.  
+- Tests core modules (mask|model|version|config|variable|logger|database|cli).  
+- Configures with a main config file & related sub-config files.  
+- Parses command-line arguments(mode|epoch) with simplicity.  
+- Visualizes LOSS & BLEU metrics via web browser, with metrics fetched from the database.  
+- Runs directly locally, or is deployed with an API backend server to serve both terminal clients & webrowser clients.  
 
 ### 🧩 Modules 模块  
 ----  
@@ -26,10 +37,11 @@ Transformer model demo implemented with PyTorch.
 │  
 ├── data/    ( text, tokenizer, vocab, tokenid, model-weight )  
 ├── scripts/ ( process_txt, tokenize_txt )  
-├── config/  ( model, common, paths, utils )  
 ├── test/    ( test mask|model|version|config|variable|logger|database|cli )  
 │  
+├── config/     ( model, common, paths, utils )  
 ├── config.toml ( main configuration entry )  
+│  
 ├── main.py     ( main entry with pipeline|train|eval|infer )  
 ├── plotter.py  ( plotly-based visualizations, fetches metrics from database )  
 ├── api.py      ( fastapi-based RESTful API )  
