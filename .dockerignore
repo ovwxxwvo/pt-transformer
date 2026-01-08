@@ -1,4 +1,4 @@
-# git ignore
+# gitignore
 
 00/
 00.sh
@@ -15,5 +15,13 @@ venv/
 __pycache__/
 *.py[cod]
 *.tmp
+
+# dockerignore
+
+Dockerfile
+.dockerignore
+
+.git/
+.gitignore
 
 
