@@ -9,7 +9,7 @@
 
 [epoch]
   current_epoch     = 1
-  total_stage_epoch = 32
+  total_stage_epoch = 8
   total_train_epoch = 1
   total_eval_epoch  = 1
   total_infer_epoch = 1

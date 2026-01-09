@@ -9,8 +9,8 @@
 [scheduler]
   min_lr   = "1e-6"
   mode     = "min"
-  factor   = 0.8
   patience = 2
+  factor   = 0.8
   verbose  = true
 
 [metricmeter]

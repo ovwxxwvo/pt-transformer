@@ -5,6 +5,7 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 
 ----  
 ### 🔧 Features 特性  
+
 - Provides practical utility modules to streamline workflow.  
   ( data handling, model handling, metric tracking, loss penalizing, early stopping, etc )  
 - Uses 100 English-Chinese text translation pairs to verify the full pipeline of training|evaluation|inference.  
@@ -17,6 +18,11 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 
 ----  
 ### 🧩 Modules 模块  
+
+Core Module, the Transformer model and auxiliary components.  
+Utils Module, project-level utility functions and tools.  
+Script Module, text processing scripts, test scripts and multi-end interaction scripts.  
+
 ```  
 .  
 ├── transformer/  
@@ -52,7 +58,8 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 ├── termui.py   ( textual-based terminal client )  
 ├── webui.py    ( gradio-based webrowser client )  
 │  
-└── server.sh   ( script to run the backend server )  
+├── server.sh      ( script to run the backend server, wrap `aip.py` & `server.py` )  
+└── pt-transformer ( script to run locally, wrap `python main.py` )  
 ```  
 
 ----  
@@ -65,7 +72,9 @@ Clone the repo to your project dir :
 git clone https://github.com/ovwxxwvo/pt-transformer.git && cd pt-transformer  
 ```  
 
-Option 1: Run with Local Python(3.11+) Environment  
+##### Option 1:  
+
+- Run with Local Python(3.11+) Environment  
 ```  
 # Create and activate a virtual environment  
 python3 -m venv .venv && source .venv/bin/activate  
@@ -75,7 +84,7 @@ pip install --upgrade pip && pip install -r requirements.txt
 bash server.sh  
 ```  
 
-Run locally with `pt-transformer` or `python main.py`:  
+- Run locally with `pt-transformer` or `python main.py`:  
 ```  
 pt-transformer --total-stage-epoch 8  
 ```  
@@ -86,7 +95,14 @@ pt-transformer --mode train --total-train-epoch 4
 pt-transformer --mode eval  --total-eval-epoch 4  
 ```  
 
-Option 2: Run in Docker  
+- Visualize metrics with `python plotter.py`  
+```  
+python plotter.py  
+```  
+
+##### Option 2:  
+
+- Run in Docker  
 ```  
 # Build docker  
 docker build -t pt-transformer:v1 .  
@@ -94,9 +110,50 @@ docker build -t pt-transformer:v1 .
 docker run -p 8000:8000 -p 7860:7860 -v $(pwd)/data:/app/data pt-transformer:v1  
 ```  
 
-Open web browser and visit:  
+- Open web browser and visit:  
 ```  
 http://localhost:7860  
+```  
+
+----  
+### 📝 Configuration 配置  
+
+All configuration files are stored in the config/ folder in the project root directory.  
+The main configuration entry is config.toml, which loads the following sub-configuration files.  
+You can adjust parameters either by directly editing existing configuration files or by adding new ones.  
+
+**model.toml** - Transformer Architecture  
+```  
+[transformer]  
+  d_model      = 512     # Embedding dimension  
+  d_ff         = 2048    # Feed-forward hidden dimension  
+  n_heads      = 4       # Attention heads (d_model % n_heads == 0)  
+  enc_n_layers = 4       # Encoder layers  
+  dec_n_layers = 4       # Decoder layers  
+```  
+
+**common.toml** - Epoch & Dataset  
+```  
+[epoch]  
+  current_epoch     = 1  # Current round (resume training)  
+  total_stage_epoch = 8  # Total pipeline rounds (train+eval+infer)  
+  total_train_epoch = 1  # Single training round  
+  total_eval_epoch  = 1  # Single evaluation round  
+  total_infer_epoch = 1  # Single inference round  
+[dataset]  
+  batch_size    = 8      # Training batch size  
+  max_seq_len   = 128    # Max sequence length (truncate/pad)  
+```  
+
+**utils.toml** – Optimizer & Scheduler  
+```  
+[optimizer]  
+  lr           = "1e-5"  # Initial learning rate  
+  weight_decay = "1e-6"  # L2 regularization coefficient  
+[scheduler]  
+  min_lr   = "1e-6"      # Minimum learning rate  
+  mode     = "min"       # Adjust mode (metric minimization)  
+  patience = 2           # Early stopping patience  
 ```  
 
 ----  
