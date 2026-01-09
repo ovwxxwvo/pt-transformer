@@ -1,4 +1,4 @@
-## PyTorch Transformer Model  
+## PyTorch Transformer  
 
 A lightweight learning demo of Transformer model implemented with PyTorch.  
 Implements an end-to-end translation pipeline, dual deployment modes, metric visualizations, etc.  
@@ -65,15 +65,7 @@ Clone the repo to your project dir :
 git clone https://github.com/ovwxxwvo/pt-transformer.git && cd pt-transformer  
 ```  
 
-Option 1: Run in Docker  
-```  
-# Build docker  
-docker build -t pt-transformer:v1 .  
-# Run docker  
-docker run -p 8000:8000 -p 7860:7860 -v $(pwd)/data:/app/data pt-transformer:v1  
-```  
-
-Option 2: Run with Local Python(3.11+) Environment  
+Option 1: Run with Local Python(3.11+) Environment  
 ```  
 # Create and activate a virtual environment  
 python3 -m venv .venv && source .venv/bin/activate  
@@ -81,6 +73,25 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install --upgrade pip && pip install -r requirements.txt  
 # Start the service  
 bash server.sh  
+```  
+
+Run locally with `pt-transformer` or `python main.py`:  
+```  
+pt-transformer --total-stage-epoch 8  
+```  
+```  
+pt-transformer --mode train --total-train-epoch 4  
+```  
+```  
+pt-transformer --mode eval  --total-eval-epoch 4  
+```  
+
+Option 2: Run in Docker  
+```  
+# Build docker  
+docker build -t pt-transformer:v1 .  
+# Run docker  
+docker run -p 8000:8000 -p 7860:7860 -v $(pwd)/data:/app/data pt-transformer:v1  
 ```  
 
 Open web browser and visit:  
