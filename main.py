@@ -19,7 +19,7 @@ def init(args:argparse.Namespace) -> tuple[Variables, Transformer, DataHandler, 
     if args.total_eval_epoch  is not None: v.total_eval_epoch  = args.total_eval_epoch
     if args.total_infer_epoch is not None: v.total_infer_epoch = args.total_infer_epoch
 
-    main_logger.info("Vars Initial ...")
+    main_logger.info("Vars Initializing ...")
     main_logger.info(f"path_data_dir={v.path_data_dir}")
     main_logger.info(
         f"total_stage_epoch={v.total_stage_epoch}, total_train_epoch={v.total_train_epoch}, total_eval_epoch={v.total_eval_epoch}" \
@@ -52,7 +52,7 @@ def init(args:argparse.Namespace) -> tuple[Variables, Transformer, DataHandler, 
         v.batch_size, v.shuffle_eval,
         )
 
-    main_logger.info("Data Initial ...")
+    main_logger.info("Data Initializing ...")
     main_logger.info(f"unk_id={v.unk_id}, pad_id={v.pad_id}, sos_id={v.sos_id}, eos_id={v.eos_id}")
     main_logger.info(f"src_vocab_size={v.src_vocab_size}, tgt_vocab_size={v.tgt_vocab_size}")
     main_logger.info(f"{('-' * 50)}")
@@ -81,7 +81,7 @@ def init(args:argparse.Namespace) -> tuple[Variables, Transformer, DataHandler, 
 
     mh = ModelHandler(model, device=v.device)
 
-    main_logger.info("Model Initial ...")
+    main_logger.info("Model Initializing ...")
     main_logger.info(f"batch_size={v.batch_size}, max_seq_len={v.max_seq_len}, d_model={v.d_model}")
     main_logger.info(f"n_heads={v.n_heads}, enc_n_layers={v.enc_n_layers}, dec_n_layers={v.dec_n_layers}")
     if os.path.exists(v.path_model_weight):
@@ -127,7 +127,7 @@ def init(args:argparse.Namespace) -> tuple[Variables, Transformer, DataHandler, 
         delta=v.stop_delta_bleu,
         )
 
-    main_logger.info("Regulator Initial ...")
+    main_logger.info("Regulator Initializing ...")
     main_logger.info(f"optem: lr={v.optim_lr}, weight_decay={v.optim_weight_decay}")
     main_logger.info(f"sched: factor={v.sched_factor}, patience={v.sched_patience}, min_lr={v.sched_min_lr}")
     main_logger.info(f"{('-' * 50)}")

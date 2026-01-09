@@ -1,11 +1,11 @@
-import os, pathlib, sqlite3
+import os, sqlite3
+from .paths import get_paths
 from .version import get_version_str
 
 
-proj_root = pathlib.Path(__file__).parent.parent
-db_dir = os.path.join(proj_root, "database")
-db_file = os.path.join(db_dir, "metric.db")
-os.makedirs(db_dir, exist_ok=True)
+p = get_paths()
+db_dir  = p.db_dir
+db_file = p.db_file
 
 class MetricDB:
     def __init__(self):

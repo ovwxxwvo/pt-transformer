@@ -30,6 +30,7 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 │       └── EarlyStopper  ( EarlyStopper(loss)|EarlyStopper(bleu)|... )  
 │  
 ├── utils/  
+│   ├── paths.py    ( common paths module, conf|log|db|data )  
 │   ├── version.py  ( semantic versioning module, with YY.MM.DD.patch schema )  
 │   ├── config.py   ( toml-based config module, loads config files to dict )  
 │   ├── variable.py ( config to variable module, convert config dict to usable variable )  

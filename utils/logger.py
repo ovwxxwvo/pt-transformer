@@ -1,12 +1,12 @@
-import os, pathlib, logging
+import os, logging
 from logging.handlers import TimedRotatingFileHandler
+from .paths import get_paths
 from .version import get_version_str
 
 
+p = get_paths()
+log_dir   = p.log_dir
 proj_name = "pt-transformer"
-proj_root = pathlib.Path(__file__).parent.parent
-log_dir   = os.path.join(proj_root, "logs")
-os.makedirs(log_dir, exist_ok=True)
 
 class VersionFilter(logging.Filter):
     def filter(self, record):

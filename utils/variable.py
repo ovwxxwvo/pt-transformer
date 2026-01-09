@@ -1,12 +1,13 @@
-import os, pathlib, toml
+import os, toml
+from .paths import get_paths
 from .config import config
 
 
 def create_variable(config):
     _path_data_dir = config["dir"]["data_dir"]
     if not _path_data_dir:
-        proj_root = pathlib.Path(__file__).parent.parent
-        _path_data_dir = os.path.join(proj_root, "data")
+        p = get_paths()
+        _path_data_dir = p.data_dir
 
     class Variables():
         # def __init__(self):

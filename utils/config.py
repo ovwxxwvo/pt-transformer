@@ -1,11 +1,12 @@
-import os, pathlib, toml
+import os, toml
+from .paths import get_paths
 
 
 def load_config():
     # path = os.path.dirname(os.path.abspath(sys.argv[0]))
-    proj_root = pathlib.Path(__file__).parent.parent
-    conf_dir  = os.path.join(proj_root, "config")
-    conf_file = os.path.join(proj_root, "config.toml")
+    p = get_paths()
+    conf_dir  = p.conf_dir
+    conf_file = p.conf_file
     # print(proj_root)
     # print(conf_dir)
     # print(conf_file)
