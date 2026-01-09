@@ -19,9 +19,9 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 ----  
 ### 🧩 Modules 模块  
 
-Core Module, the Transformer model and auxiliary components.  
-Utils Module, project-level utility functions and tools.  
-Script Module, text processing scripts, test scripts and multi-end interaction scripts.  
+- Core Module, the Transformer model and auxiliary components.  
+- Utils Module, project-level utility functions and tools.  
+- Script Module, text processing scripts, test scripts and multi-end interaction scripts.  
 
 ```  
 .  
