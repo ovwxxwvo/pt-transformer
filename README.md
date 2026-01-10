@@ -6,7 +6,8 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 ----  
 ### 🔧 Features 特性  
 
-- Provides practical utility modules to streamline workflow.  
+- Provides Transformer model & related Neural Network Extension components.  
+- Provides Transformer practical utility to streamline workflow.  
   ( data handling, model handling, metric tracking, loss penalizing, early stopping, etc )  
 - Uses 100 English-Chinese text translation pairs to verify the full pipeline of training|evaluation|inference.  
 - Tokenizes original text data by scripts to generate the tokenizer|vocab|tokenid.  
@@ -19,16 +20,18 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 ----  
 ### 🧩 Modules 模块  
 
-- Core Module, the Transformer model and auxiliary components.  
-- Utils Module, project-level utility functions and tools.  
+- Core Module, Transformer model & related Neural Network Extension components & related practical utilities.  
+- Utils Module, project-level utilities functions and tools.  
 - Script Module, text processing scripts, test scripts and multi-end interaction scripts.  
 
 ```  
 .  
 ├── transformer/  
-│   ├── nn_ext.py ( FeedForwardNetwork, MaskGenerator, ... )  
-│   ├── model.py  ( EncodeLayer, DecodeLayer, InputLayer, OutputLayer, Transformer )  
-│   └── utils.py  ( DataHandler, ModelHandler, MetricMeter, LossPenalizer, EarlyStopper, ... )  
+│   ├── nn_ext.py - Transformer Neural Network Extension components  
+│   │   └── FeedForwardNetwork, MaskGenerator, ...  
+│   ├── model.py  - Transformer Model, assembled & stacked by key layers  
+│   │   └── EncodeLayer, DecodeLayer, InputLayer, OutputLayer, Transformer  
+│   └── utils.py  - Transformer practical Utilities  
 │       ├── DataHandler   ( reverse_vocab|batch_data|save_model_weight|... )  
 │       ├── ModelHandler  ( train_model|eval_model|infer_model )  
 │       ├── MetricMeter   ( LossMeter|BleuMeter|... )  
@@ -36,30 +39,30 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 │       └── EarlyStopper  ( EarlyStopper(loss)|EarlyStopper(bleu)|... )  
 │  
 ├── utils/  
-│   ├── paths.py    ( common paths module, conf|log|db|data )  
-│   ├── version.py  ( semantic versioning module, with YY.MM.DD.patch schema )  
-│   ├── config.py   ( toml-based config module, loads config files to dict )  
-│   ├── variable.py ( config to variable module, convert config dict to usable variable )  
-│   ├── logger.py   ( logging-based logger module, records model|main|server logs )  
-│   ├── database.py ( sqlite-based database module, stores loss|bleu metrics data )  
-│   └── cli.py      ( argparse-based cli module, parses command-line arguments )  
+│   ├── paths.py    - common paths module, conf|log|db|data  
+│   ├── version.py  - semantic versioning module, with YY.MM.DD.patch schema  
+│   ├── config.py   - toml-based config module, loads config files to dict  
+│   ├── variable.py - config to variable module, converts config dict to usable variable  
+│   ├── logger.py   - logging-based logger module, records model|main|server logs  
+│   ├── database.py - sqlite-based database module, stores loss|bleu metrics data  
+│   └── cli.py      - argparse-based cli module, parses command-line arguments  
 │  
-├── data/    ( text, tokenizer, vocab, tokenid, model-weight )  
-├── scripts/ ( process_txt, tokenize_txt )  
-├── test/    ( test mask|model|version|config|variable|logger|database|cli )  
+├── data/    - data includes text|tokenizer|vocab|tokenid|model-weight|...  
+├── scripts/ - scripts for processing & tokenizing text data  
+├── test/    - scripts for testing mask|model|version|config|variable|logger|database|cli  
 │  
-├── config/     ( model, common, paths, utils )  
-├── config.toml ( main configuration entry )  
+├── config/     - sub-config files includes model|common|paths|utils  
+├── config.toml - main configuration entry  
 │  
-├── main.py     ( main entry with pipeline|train|eval|infer )  
-├── plotter.py  ( plotly-based visualizations, fetches metrics from database )  
-├── api.py      ( fastapi-based RESTful API )  
-├── server.py   ( uvicorn-based server )  
-├── termui.py   ( textual-based terminal client )  
-├── webui.py    ( gradio-based webrowser client )  
+├── main.py    - main entry with pipeline|train|eval|infer  
+├── plotter.py - plotly-based visualizations, fetches metrics from database  
+├── api.py     - fastapi-based RESTful API  
+├── server.py  - uvicorn-based server  
+├── termui.py  - textual-based terminal client  
+├── webui.py   - gradio-based webrowser client  
 │  
-├── server.sh      ( script to run the backend server, wrap `aip.py` & `server.py` )  
-└── pt-transformer ( script to run locally, wrap `python main.py` )  
+├── server.sh      - script to run the backend server, wrap `api.py` & `server.py`  
+└── pt-transformer - script to run locally, wrap `python main.py`  
 ```  
 
 ----  
@@ -127,7 +130,7 @@ You can adjust parameters either by directly editing existing configuration file
 [transformer]  
   d_model      = 512     # Embedding dimension  
   d_ff         = 2048    # Feed-forward hidden dimension  
-  n_heads      = 4       # Attention heads (d_model % n_heads == 0)  
+  n_heads      = 4       # Attention heads  
   enc_n_layers = 4       # Encoder layers  
   dec_n_layers = 4       # Decoder layers  
 ```  
