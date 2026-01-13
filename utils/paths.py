@@ -9,6 +9,7 @@ class Paths():
     db_dir    = proj_root/"database"
     data_dir  = proj_root/"data"
 
+    ver_file = proj_root/"CHANGELOG.md"
     conf_file = proj_root/"config.toml"
     db_file   = db_dir/"metric.db"
 

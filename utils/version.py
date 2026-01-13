@@ -1,61 +1,103 @@
-# -------------------------- Core: Version Identification (Only modify here when iterating) --------------------------
-# Version format: YYYY.MM.DD.patch (aligns with semantic versioning logic)
-# - YY.MM.DD: Main/minor version (marks core iteration date)
-# - patch: Revision version (increments for bug fixes/minor optimizations)
-# Version Status: stable/beta/dev (for environment distinction)
-__version__ = "25.12.01.0"
-__status__ = "stable"
+import re, subprocess
+from .paths import get_paths
 
-# -------------------------- Auxiliary: Version Changelog (Structured for traceability) --------------------------
-# Key: Version number; Value: List of changes (classified by "Add/Opt/Fix" for clarity)
-version_changelog = {
-    "25.12.01.0": [
-        "【Add】nn_ext.py - Transformer Neural Network Extension components ( FeedForwardNetwork, MaskGenerator, ... )",
-        "【Add】model.py  - Transformer Model, assembled & stacked by key layers ( EncodeLayer, DecodeLayer, InputLayer, OutputLayer, Transformer )",
-        "【Add】utils.py  - Transformer practical Utilities ( DataHandler, ModelHandler, MetricMeter, LossPenalizer, EarlyStopper, ... )",
-        "【Add】paths.py    - common paths module, conf|log|db|data                             ",
-        "【Add】version.py  - semantic versioning module, with YY.MM.DD.patch schema            ",
-        "【Add】config.py   - toml-based config module, loads config files to dict              ",
-        "【Add】variable.py - config to variable module, converts config dict to usable variable ",
-        "【Add】logger.py   - logging-based logger module, records model|main|server logs       ",
-        "【Add】database.py - sqlite-based database module, stores loss|bleu metrics data       ",
-        "【Add】cli.py      - argparse-based cli module, parses command-line arguments          ",
-        "【Add】test/ - scripts for testing mask|model|version|config|variable|logger|database|cli",
-        "【Add】main.py    - main entry with pipeline|train|eval|infer                 ",
-        "【Add】plotter.py - plotly-based visualizations, fetches metrics from database",
-        "【Add】api.py     - fastapi-based RESTful API                                 ",
-        "【Add】server.py  - uvicorn-based server                                      ",
-        "【Add】termui.py  - textual-based terminal client                             ",
-        "【Add】webui.py   - gradio-based webrowser client                             ",
-        "【Add】server.sh      - script to run the backend server, wrap `api.py` & `server.py`",
-        "【Add】pt-transformer - script to run locally, wrap `python main.py`                 ",
-        "【Add】 ",
-        "【Add】 ",
-        ],
-    }
 
-# -------------------------- Utility Functions: Expose Version Information --------------------------
+def __get_changelog_raw() -> str:
+    p = get_paths()
+    CHANGELOG_PATH = p.ver_file
+    if not CHANGELOG_PATH.exists():
+        return {}
+    with open(CHANGELOG_PATH, "r", encoding="utf-8") as f:
+        raw = f.read().strip()
+    changelog_dict = {}
+    version_re = re.compile(r"##\s+\[(.+?)\](.*?)(?=##\s+\[|\Z)", re.DOTALL | re.MULTILINE)
+    category_re = re.compile(r"###\s+([A-Za-z]+)(.*?)(?=###\s+|\Z)", re.DOTALL | re.MULTILINE)
+    item_re = re.compile(r"^\s*-\s+(.*?)$", re.MULTILINE)
+    for version_match in version_re.finditer(raw):
+        version = version_match.group(1).strip()
+        version_content = version_match.group(2).strip()
+        changelog_dict[version] = {}
+        for category_match in category_re.finditer(version_content):
+            category = category_match.group(1).strip()
+            category_content = category_match.group(2).strip()
+            items = [item.strip() for item in item_re.findall(category_content) if item.strip()]
+            changelog_dict[version][category] = items
+    return changelog_dict
+
+def get_current_git_branch() -> str:
+    branch = "master"
+    try:
+        output = subprocess.check_output(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            stderr=subprocess.STDOUT,
+            text=True
+            )
+        branch = output.strip()
+        return branch
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return branch
+
+def get_version_str_stable() -> str:
+    version = ""
+    changelog = __get_changelog_raw()
+    version_list = [v for v in changelog.keys() if v != "Unreleased"]
+    version = version_list[0] if version_list else "v0.0.0"
+    return version
+
+def get_version_str_dev() -> str:
+    version = ""
+    changelog = __get_changelog_raw()
+    stable_versions = [v for v in changelog.keys() if v != "Unreleased"]
+    stable_ver = stable_versions[0] if stable_versions else "v0.0.0"
+    unreleased = changelog.get("Unreleased", {})
+    total_items = sum(len(items) for items in unreleased.values())
+
+    ver_parts = stable_ver.lstrip("v").split(".")
+    while len(ver_parts) < 3:
+        ver_parts.append("0")
+    if total_items > 0:
+        ver_parts.append(str(total_items))
+    else:
+        if len(ver_parts) == 3:
+            ver_parts.append("0")
+
+    version = f"v{'.'.join(ver_parts)}"
+    return version
+
+def get_version_status() -> str:
+    branch = get_current_git_branch()
+    status = (branch == "master" and "stable" or "dev")
+    return status
 
 def get_version_str() -> str:
-    """
-    Returns only the version string for simple use cases (e.g., API response, logger injection)
-    :return: Pure version string (e.g., "25.12.01.0")
-    """
-    return __version__
+    status = get_version_status()
+    version = (status == "stable" and get_version_str_stable() or get_version_str_dev())
+    return version
+
+def get_version_date() -> str:
+    date = ""
+    version_str = get_version_str()
+    ver_parts = version_str.lstrip("v").split(".")
+    while len(ver_parts) < 3:
+        ver_parts.append("00")
+    year, month, day = ver_parts[0], ver_parts[1], ver_parts[2]
+    year = f"20{ver_parts[0]}" if len(ver_parts[0]) == 2 else ver_parts[0]
+    date = f"{year}-{month}-{day}"
+    return date
+
+def get_changelog() -> dict:
+    changelog = __get_changelog_raw()
+    status = get_version_status()
+    if status == "stable" and "Unreleased" in changelog:
+        del changelog["Unreleased"]
+    return changelog
 
 def get_version_info() -> dict:
-    """
-    Returns structured version information for logger, database, UI, etc.
-    :return: Dict containing version, update date, changelog, and status
-    """
-    version_parts = __version__.split(".")
-    update_date = f"20{version_parts[0]}-{version_parts[1]}-{version_parts[2]}"
-
     return {
-        "version":     __version__,
-        "update_date": update_date,
-        "changelog":   version_changelog.get(__version__, []),
-        "status":      __status__,
+        "version": get_version_str(),
+        "status":  get_version_status(),
+        "date":    get_version_date(),
+        "changelog": get_changelog()
         }
 
 
