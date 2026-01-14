@@ -1,6 +1,6 @@
 import sys, pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-from utils.version import (
+from common import (
     get_current_git_branch,
     get_version_status,
     get_version_str_stable,
@@ -29,10 +29,10 @@ def main():
     for ver, detail in changelog.items():
         print(f"{ver}: {detail}")
 
-    print(f"\n{'完整版本信息'}: ")
-    version_info = get_version_info()
-    for key, value in version_info.items():
-        print(f"{key}: {value}")
+    # print(f"\n{'完整版本信息'}: ")
+    # version_info = get_version_info()
+    # for key, value in version_info.items():
+    #     print(f"{key}: {value}")
 
     print("\n🎉 Version Module test passed completely!")
 

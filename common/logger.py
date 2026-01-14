@@ -1,12 +1,7 @@
-import os, logging
-from logging.handlers import TimedRotatingFileHandler
+import os, logging, logging.handlers
 from .paths import get_paths
 from .version import get_version_str
 
-
-p = get_paths()
-log_dir   = p.log_dir
-proj_name = "pt-transformer"
 
 class VersionFilter(logging.Filter):
     def filter(self, record):
@@ -15,9 +10,10 @@ class VersionFilter(logging.Filter):
         return True
 
 def init_logger(log_id):
-    log_id = proj_name + "_" + log_id
-    log_file = os.path.join(log_dir, log_id)
+    p = get_paths()
+    log_dir = p.log_dir
 
+    log_file = os.path.join(log_dir, log_id)
     logger = logging.getLogger(log_id)
     if logger.hasHandlers(): return logger
 
@@ -38,7 +34,7 @@ def init_logger(log_id):
     logger.addHandler(console_handler)
 
     # File Handler: Daily rotation, output DEBUG+ (persistent storage, keep 7 days)
-    file_handler = TimedRotatingFileHandler(
+    file_handler = logging.handlers.TimedRotatingFileHandler(
         filename=log_file,
         when="D",          # Rotate by day
         interval=1,        # x file per day
@@ -52,10 +48,5 @@ def init_logger(log_id):
     logger.addHandler(file_handler)
 
     return logger
-
-
-model_logger  = init_logger("model")
-main_logger   = init_logger("main")
-server_logger = init_logger("server")
 
 

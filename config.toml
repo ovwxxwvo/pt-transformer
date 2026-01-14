@@ -4,10 +4,10 @@
 [include]
 conf_files = [
 
-"model.toml",
-"common.toml",
-"paths.toml",
-"utils.toml",
+"config/model.toml",
+"config/common.toml",
+"config/paths.toml",
+"config/utils.toml",
 
 ]
 

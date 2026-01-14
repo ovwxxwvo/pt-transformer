@@ -1,6 +1,6 @@
 import sys, pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-from utils import get_metric_db
+from transformer import get_metric_db
 
 
 def main():
@@ -14,7 +14,7 @@ def main():
 
         # Insert test metric (parameters in one line)
         db.insert_metric(step_type="test", stage_epoch=1, total_stage_epoch=8, task_epoch=1, total_task_epoch=1, loss=0.234, bleu=0.78)
-        db.insert_metric(step_type="test", stage_epoch=2, total_stage_epoch=8, task_epoch=1, total_task_epoch=1, loss=0.210, bleu=0.79)
+        db.insert_metric(step_type="test", stage_epoch=2, total_stage_epoch=8, task_epoch=1, total_task_epoch=1, loss=0.212, bleu=0.79)
         db.insert_metric(step_type="test", stage_epoch=3, total_stage_epoch=8, task_epoch=1, total_task_epoch=1, loss=0.198, bleu=0.88)
         db.insert_metric(step_type="test", stage_epoch=2, total_stage_epoch=8, task_epoch=1, total_task_epoch=1, loss=0.186, bleu=0.81)
         db.insert_metric(step_type="test", stage_epoch=4, total_stage_epoch=8, task_epoch=1, total_task_epoch=1, loss=0.174, bleu=0.82)

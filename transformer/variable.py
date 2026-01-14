@@ -1,6 +1,5 @@
 import os, toml
 from .paths import get_paths
-from .config import config
 
 
 def create_variable(config):
@@ -126,8 +125,5 @@ def create_variable(config):
 
     ##
     return Variables
-
-
-Variables = create_variable(config)
 
 

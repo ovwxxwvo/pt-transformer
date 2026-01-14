@@ -1,5 +1,5 @@
 import argparse
-from .version import get_version_str
+from common import get_version_str
 
 
 def parse_cli_args():
@@ -9,11 +9,11 @@ def parse_cli_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
         )
 
-     # Version information (enhanced with status)
+    # Version information (enhanced with status)
     parser.add_argument(
         "-v", "--version",
         action="version",
-        version=f"%(prog)s v{get_version_str()}",
+        version=f"%(prog)s {get_version_str()}",
         help="App Version"
         )
 

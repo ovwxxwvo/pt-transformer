@@ -1,7 +1,7 @@
 import os, pathlib, webbrowser
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots as ms
-from utils import get_metric_db
+from transformer import get_metric_db
 
 
 proj_root = pathlib.Path(__file__).parent

@@ -1,6 +1,6 @@
 import sys, pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-from utils import parse_cli_args
+from transformer import parse_cli_args
 
 
 def test_cli_args(test_argv):
@@ -27,7 +27,8 @@ def main():
     # Define test cases (all scenarios covered)
     test_cases = [
         ("Test 1: Version argument", ["test_cli.py", "-v"]),
-        ("Test 2: Full parameters", ["test_cli.py", "--mode", "train", "--n-heads", "8", "--enc-n-layers", "6", "--dec-n-layers", "6", "--epoch-total", "32"]),
+        ("Test 2: Full parameters", ["test_cli.py", "--mode", "all", "--total-stage-epoch", "16",
+                                     "--n-heads", "8", "--enc-n-layers", "6", "--dec-n-layers", "6"]),
         ("Test 3: Invalid mode", ["test_cli.py", "--mode", "invalid_mode"])
         ]
 
@@ -45,7 +46,7 @@ def main():
                 print(f"Attention Heads: {result.n_heads if result.n_heads else 'Default'}")
                 print(f"Encoder Layers: {result.enc_n_layers if result.enc_n_layers else 'Default'}")
                 print(f"Decoder Layers: {result.dec_n_layers if result.dec_n_layers else 'Default'}")
-                print(f"Total Epochs: {result.epoch_total if result.epoch_total else 'Default'}")
+                print(f"Total Epochs: {result.total_stage_epoch if result.total_stage_epoch else 'Default'}")
                 print(f"   ✅ Parse success")
         else:
             print(f"   ❌ Failed: {result}")

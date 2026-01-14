@@ -1,6 +1,6 @@
 import os, sqlite3
 from .paths import get_paths
-from .version import get_version_str
+from common import get_version_str
 
 
 p = get_paths()

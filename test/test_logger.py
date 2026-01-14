@@ -1,6 +1,6 @@
 import sys, pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-from utils import init_logger
+from common import init_logger
 
 
 def main():

@@ -3,13 +3,16 @@ import torch.optim as optim
 import torch.optim.lr_scheduler as sched
 from tokenizers import Tokenizer
 from tqdm import tqdm
+from common import load_config, init_logger
+from transformer import create_variable, get_metric_db, parse_cli_args
 from transformer import ( Transformer,
     DataHandler, MetricMeter, LossPenalizer, EarlyStopper, ModelHandler, )
-from utils import ( Variables,
-    model_logger, main_logger, server_logger,
-    get_metric_db, parse_cli_args,
-    )
 
+
+Variables = create_variable(load_config())
+model_logger  = init_logger("model")
+main_logger   = init_logger("main")
+server_logger = init_logger("server")
 
 def init(args:argparse.Namespace) -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
     # init variable
