@@ -21,7 +21,7 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 ### 🧩 Modules 模块  
 
 - Core Module, Transformer model & related Neural Network Extension components & related practical utilities.  
-- Utils Module, project-level utilities functions and tools.  
+- Common Module, project-level utilities functions and tools.  
 - Script Module, text processing scripts, test scripts and multi-end interaction scripts.  
 
 ```  
@@ -31,25 +31,26 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 │   │   └── FeedForwardNetwork, MaskGenerator, ...  
 │   ├── model.py  - Transformer Model, assembled & stacked by key layers  
 │   │   └── EncodeLayer, DecodeLayer, InputLayer, OutputLayer, Transformer  
-│   └── utils.py  - Transformer practical Utilities  
-│       ├── DataHandler   ( reverse_vocab|batch_data|save_model_weight|... )  
-│       ├── ModelHandler  ( train_model|eval_model|infer_model )  
-│       ├── MetricMeter   ( LossMeter|BleuMeter|... )  
-│       ├── LossPenalizer ( IdsPenalizer|... )  
-│       └── EarlyStopper  ( EarlyStopper(loss)|EarlyStopper(bleu)|... )  
-│  
-├── utils/  
-│   ├── paths.py    - common paths module, conf|log|db|data  
-│   ├── version.py  - semantic versioning module, with YY.MM.DD.patch schema  
-│   ├── config.py   - toml-based config module, loads config files to dict  
-│   ├── variable.py - config to variable module, converts config dict to usable variable  
-│   ├── logger.py   - logging-based logger module, records model|main|server logs  
+│   ├── utils.py  - Transformer practical Utilities  
+│   │    ├── DataHandler   ( reverse_vocab|batch_data|save_model_weight|... )  
+│   │    ├── ModelHandler  ( train_model|eval_model|infer_model )  
+│   │    ├── MetricMeter   ( LossMeter|BleuMeter|... )  
+│   │    ├── LossPenalizer ( IdsPenalizer|... )  
+│   │    └── EarlyStopper  ( EarlyStopper(loss)|EarlyStopper(bleu)|... )  
+│   ├── paths.py    - common paths module, data|db  
+│   ├── variable.py - toml-based variable module, converts config dict to usable variable  
 │   ├── database.py - sqlite-based database module, stores loss|bleu metrics data  
 │   └── cli.py      - argparse-based cli module, parses command-line arguments  
 │  
+├── common/  
+│   ├── paths.py    - common paths module, conf|log  
+│   ├── version.py  - semantic versioning module, with YY.MM.DD.patch schema  
+│   ├── config.py   - toml-based config module, loads config files to dict  
+│   └── logger.py   - logging-based logger module, records model|main|server logs  
+│  
 ├── data/    - data includes text|tokenizer|vocab|tokenid|model-weight|...  
 ├── scripts/ - scripts for processing & tokenizing text data  
-├── test/    - scripts for testing mask|model|version|config|variable|logger|database|cli  
+├── test/    - scripts for testing mask|model|version|config|logger|variable|database|cli  
 │  
 ├── config/     - sub-config files includes model|common|paths|utils  
 ├── config.toml - main configuration entry  

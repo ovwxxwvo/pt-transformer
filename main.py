@@ -13,6 +13,8 @@ Variables = create_variable(load_config())
 model_logger  = init_logger("model")
 main_logger   = init_logger("main")
 server_logger = init_logger("server")
+metric_db     = get_metric_db()
+args = parse_cli_args()
 
 def init(args:argparse.Namespace) -> tuple[Variables, Transformer, DataHandler, ModelHandler]:
     # init variable
@@ -169,8 +171,7 @@ def train(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
             f"loss={loss:.4f}, ids_pen={ids_pen:.4f}"
         model_logger.info(msg)
 
-        db = get_metric_db()
-        db.insert_metric(step_type="train",
+        metric_db.insert_metric(step_type="train",
             stage_epoch=stage_epoch, total_stage_epoch=total_stage_epoch,
             task_epoch=epoch, total_task_epoch=total_task_epoch,
             loss=loss, bleu=None )
@@ -209,8 +210,7 @@ def eval(v:Variables, model:Transformer, dh:DataHandler, mh:ModelHandler):
             f"loss={loss:.4f}, bleu={bleu:.4f}"
         model_logger.info(msg)
 
-        db = get_metric_db()
-        db.insert_metric(step_type="eval",
+        metric_db.insert_metric(step_type="eval",
             stage_epoch=stage_epoch, total_stage_epoch=total_stage_epoch,
             task_epoch=epoch, total_task_epoch=total_task_epoch,
             loss=loss, bleu=bleu )
@@ -261,8 +261,6 @@ def pipeline(v:Variables, m:Transformer, dh:DataHandler, mh:ModelHandler):
         infer(v, mh)
 
 def main():
-    args = parse_cli_args()
-
     main_logger.info(f"{('-' * 50)}")
     v, m, dh, mh = init(args)
 
