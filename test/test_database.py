@@ -1,6 +1,6 @@
 import sys, pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-from transformer import get_metric_db
+from utils import get_metric_db
 
 
 def main():

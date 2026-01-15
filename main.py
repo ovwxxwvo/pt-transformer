@@ -4,9 +4,9 @@ import torch.optim.lr_scheduler as sched
 from tokenizers import Tokenizer
 from tqdm import tqdm
 from common import load_config, init_logger
-from transformer import create_variable, get_metric_db, parse_cli_args
+from utils import create_variable, get_metric_db, parse_cli_args
 from transformer import ( Transformer,
-    DataHandler, MetricMeter, LossPenalizer, EarlyStopper, ModelHandler, )
+    DataHandler, ModelHandler, MetricMeter, LossPenalizer, EarlyStopper, )
 
 
 Variables = create_variable(load_config())
@@ -95,7 +95,7 @@ def init(args:argparse.Namespace) -> tuple[Variables, Transformer, DataHandler, 
         main_logger.info("No pre-trained model found, initializing model from scratch")
     main_logger.info(f"{('-' * 50)}")
 
-    # init regulator
+    # init monitor
     v.optimizer = optim.AdamW(
         model.parameters(),
         lr=v.optim_lr,
@@ -132,7 +132,7 @@ def init(args:argparse.Namespace) -> tuple[Variables, Transformer, DataHandler, 
         delta=v.stop_delta_bleu,
         )
 
-    main_logger.info("Regulator Initializing ...")
+    main_logger.info("Monitor Initializing ...")
     main_logger.info(f"optem: lr={v.optim_lr}, weight_decay={v.optim_weight_decay}")
     main_logger.info(f"sched: factor={v.sched_factor}, patience={v.sched_patience}, min_lr={v.sched_min_lr}")
     main_logger.info(f"{('-' * 50)}")

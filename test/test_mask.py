@@ -1,6 +1,5 @@
 import sys, pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-
 import random, torch
 from transformer.nn_ext import MaskGenerator
 

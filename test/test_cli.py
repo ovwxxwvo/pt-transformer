@@ -1,6 +1,6 @@
 import sys, pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-from transformer import parse_cli_args
+from utils import parse_cli_args
 
 
 def test_cli_args(test_argv):

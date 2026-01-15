@@ -1,6 +1,5 @@
 import sys, pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-
 import torch
 from transformer.model import Transformer
 

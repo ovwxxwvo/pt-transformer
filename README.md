@@ -31,22 +31,25 @@ Implements an end-to-end translation pipeline, dual deployment modes, metric vis
 │   │   └── FeedForwardNetwork, MaskGenerator, ...  
 │   ├── model.py  - Transformer Model, assembled & stacked by key layers  
 │   │   └── EncodeLayer, DecodeLayer, InputLayer, OutputLayer, Transformer  
-│   ├── utils.py  - Transformer practical Utilities  
-│   │    ├── DataHandler   ( reverse_vocab|batch_data|save_model_weight|... )  
-│   │    ├── ModelHandler  ( train_model|eval_model|infer_model )  
-│   │    ├── MetricMeter   ( LossMeter|BleuMeter|... )  
-│   │    ├── LossPenalizer ( IdsPenalizer|... )  
-│   │    └── EarlyStopper  ( EarlyStopper(loss)|EarlyStopper(bleu)|... )  
-│   ├── paths.py    - common paths module, data|db  
-│   ├── variable.py - toml-based variable module, converts config dict to usable variable  
-│   ├── database.py - sqlite-based database module, stores loss|bleu metrics data  
-│   └── cli.py      - argparse-based cli module, parses command-line arguments  
+│   ├── monitor.py  - Transformer practical Utilities  
+│   │   ├── DataHandler   ( reverse_vocab|batch_data|save_model_weight|... )  
+│   │   └── ModelHandler  ( train_model|eval_model|infer_model )  
+│   └── handler.py  - Transformer practical Utilities  
+│       ├── MetricMeter   ( LossMeter|BleuMeter|... )  
+│       ├── LossPenalizer ( IdsPenalizer|... )  
+│       └── EarlyStopper  ( EarlyStopper(loss)|EarlyStopper(bleu)|... )  
 │  
 ├── common/  
 │   ├── paths.py    - common paths module, conf|log  
 │   ├── version.py  - semantic versioning module, with YY.MM.DD.patch schema  
 │   ├── config.py   - toml-based config module, loads config files to dict  
 │   └── logger.py   - logging-based logger module, records model|main|server logs  
+│  
+├── utils/  
+│   ├── paths.py    - common paths module, data|db  
+│   ├── variable.py - toml-based variable module, converts config dict to usable variable  
+│   ├── database.py - sqlite-based database module, stores loss|bleu metrics data  
+│   └── cli.py      - argparse-based cli module, parses command-line arguments  
 │  
 ├── data/    - data includes text|tokenizer|vocab|tokenid|model-weight|...  
 ├── scripts/ - scripts for processing & tokenizing text data  

@@ -18,8 +18,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/):
       ( FeedForwardNetwork, MaskGenerator, ... )  
     - model.py  - Transformer Model, assembled & stacked by key layers  
       ( EncodeLayer, DecodeLayer, InputLayer, OutputLayer, Transformer )  
-    - utils.py  - Transformer practical Utilities  
-      ( DataHandler, ModelHandler, MetricMeter, LossPenalizer, EarlyStopper, ... )  
+    - handler.py  - Transformer practical Utilities  
+      ( DataHandler, ModelHandler, ... )  
+    - monitor.py  - Transformer practical Utilities  
+      ( MetricMeter, LossPenalizer, EarlyStopper, ... )  
     - paths.py    - common paths module, data|db  
     - variable.py - toml-based variable module, converts config dict to usable variable  
     - database.py - sqlite-based database module, stores loss|bleu metrics data  

@@ -1,7 +1,7 @@
 import sys, pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 from common import load_config
-from transformer import create_variable
+from utils import create_variable
 
 
 def main():
