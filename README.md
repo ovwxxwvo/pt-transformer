@@ -81,12 +81,15 @@ git clone https://github.com/ovwxxwvo/pt-transformer.git && cd pt-transformer
 
 ##### Option 1:  
 
-- Run with Local Python(3.11+) Environment  
+- Run with Local Python Environment  
+  ( REQUIRES: **Python 3.13 | uv | fish shell** )  
 ```  
-# Create and activate a virtual environment  
-python3 -m venv .venv && source .venv/bin/activate  
+# Create a virtual environment  
+uv venv --python python3.13  
+# Activate a virtual environment  
+source "./.venv/bin/activate.fish"  
 # Install dependencies  
-pip install --upgrade pip && pip install -r requirements.txt  
+uv pip install -r requirements.txt  
 # Start the service  
 bash server.sh  
 ```  

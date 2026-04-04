@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os, argparse, torch
 import torch.optim as optim
 import torch.optim.lr_scheduler as sched
