@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+
+# Dynamically get project root directory (where this script is located)
+PROJ_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+
+# Switch to project root to avoid path errors
+cd "$PROJ_ROOT" || exit 1
+
+# Pass all arguments to main.py directly
+python main.py "$@"
+
+

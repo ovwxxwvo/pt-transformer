@@ -1,0 +1,39 @@
+# Transformer config,
+
+
+[general]
+  device = "cpu"
+  text   = "hello, how is your day going!"
+  input_text  = "hello, how is your day going!"
+  output_text = ""
+
+[epoch]
+  current_epoch     = 1
+  total_stage_epoch = 8
+  total_train_epoch = 1
+  total_eval_epoch  = 1
+  total_infer_epoch = 1
+
+[vocab]
+  unk_token = "[UNK]"
+  pad_token = "[PAD]"
+  sos_token = "[SOS]"
+  eos_token = "[EOS]"
+  unk_id = 0
+  pad_id = 0
+  sos_id = 0
+  eos_id = 0
+
+[dataset]
+  batch_size    = 8
+  max_seq_len   = 128
+  shuffle_train = true
+  shuffle_eval  = false
+  tokenizer_src    = {}
+  tokenizer_tgt    = {}
+  id2word_src      = {}
+  id2word_tgt      = {}
+  databatchs_train = []
+  databatchs_eval  = []
+
+

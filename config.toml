@@ -1,0 +1,13 @@
+# Transformer config,
+
+
+[include]
+conf_files = [
+
+"config/model.toml",
+"config/common.toml",
+"config/paths.toml",
+"config/utils.toml",
+
+]
+
